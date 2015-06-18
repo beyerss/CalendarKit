@@ -68,8 +68,6 @@ extension Month {
         let newDate = calendar.dateByAddingComponents(delta, toDate: firstDayDate!, options: [])
         if let lastDayDate = newDate {
             components = calendar.components(.Day, fromDate: lastDayDate)
-            
-            print("Number of days in \(date) is \(components.day)")
             return components.day
         }
         
@@ -90,8 +88,6 @@ extension Month {
         } else {
             day--
         }
-        
-//        print("first day of week for \(date) is \(day)")
         
         return day
     }
@@ -114,6 +110,10 @@ extension Month {
         return numberOfWeeks
     }
     
+    func columnAtIndex(index: NSIndexPath) -> Int {
+        return index.row / weeksInMonth()
+    }
+    
     func getDateForCell(indexPath path: NSIndexPath) -> NSDate {
         let calendar = NSCalendar.currentCalendar()
         let components = calendar.components([.Day, .Month, .Year, .Weekday], fromDate: date)
@@ -123,7 +123,7 @@ extension Month {
         dayOfMonth -= firstDay
         
         var dateToReturn: NSDate?
-        let column = path.row / weeksInMonth()
+        let column = columnAtIndex(path)
         let row = path.row % weeksInMonth()
         
         let day = column - firstDay + 1 + (row * 7)

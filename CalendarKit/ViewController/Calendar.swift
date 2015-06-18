@@ -21,6 +21,9 @@ public class Calendar: UIViewController {
         }
     }
     
+    var selectedDate: NSDate?
+    private var selectedCell: UICollectionViewCell?
+    
     internal init() {
         super.init(nibName: "Calendar", bundle: NSBundle(identifier: "com.beyersapps.CalendarKit"))
     }
@@ -31,6 +34,8 @@ public class Calendar: UIViewController {
     
     override public func viewDidLoad() {
         super.viewDidLoad()
+        
+        view.backgroundColor = CalendarDesignKit.calendarBackgroundColor
         
         // create the date formatter used for displaying the month
         monthFormatter = NSDateFormatter()
@@ -73,14 +78,6 @@ public class Calendar: UIViewController {
         if (month != currentMonth) {
             currentMonth = month
         }
-        
-//        // We don't need to do anything unless we are looking at a new section
-//        if (indexPath.section != currentSection) {
-//            // Since we moved we need to reset to the center of the collection view
-////            resetPosition(indexPath.section - currentSection)
-//            // remember what section is now showing
-//            currentSection = indexPath.section
-//        }
     }
     
     public func scrollViewDidEndDecelerating(scrollView: UIScrollView) {
@@ -121,6 +118,24 @@ public class Calendar: UIViewController {
         return CGSizeMake((calendarCollectionView.frame.size.width-12) / 7, (calendarCollectionView.frame.size.height - dividerHeight) / CGFloat(rowsNeeded))
     }
     
+    public func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
+        collectionView.deselectItemAtIndexPath(indexPath, animated: true)
+        
+        selectedDate = monthsShowing[indexPath.section].getDateForCell(indexPath: indexPath)
+        if let previousSelected = selectedCell as? BasicDateCollectionViewCell {
+            if let previousPath = collectionView.indexPathForCell(previousSelected) {
+                setupStyle(previousSelected, indexPath: previousPath)
+            } else {
+                previousSelected.style()
+            }
+        }
+        
+        if let dateCell = collectionView.cellForItemAtIndexPath(indexPath) as? BasicDateCollectionViewCell {
+            dateCell.style(dateIsSelected: true)
+            selectedCell = dateCell
+        }
+    }
+    
 }
 
 extension Calendar: UICollectionViewDataSource {
@@ -139,23 +154,58 @@ extension Calendar: UICollectionViewDataSource {
     
     public func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         
-        let month = monthsShowing[indexPath.section]
-        
-        if (indexPath.section == 2) {
-            let date = month.getDateForCell(indexPath: indexPath)
-//            print("Date for cell at row \(indexPath.row) is \(date)")
-        }
-        
         // Get the cell
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier("BasicDateCell", forIndexPath: indexPath) as UICollectionViewCell
         if let dateCell = cell as? BasicDateCollectionViewCell {
-            // Get the date for today
-            let date = month.getDateForCell(indexPath: indexPath)
-            
-            let day = NSCalendar.currentCalendar().components(.Day, fromDate: date).day
-            dateCell.dateLabel.text = "\(day)"
+            setupStyle(dateCell, indexPath: indexPath)
         }
         
         return cell
     }
+    
+    private func setupStyle(dateCell: BasicDateCollectionViewCell, indexPath index: NSIndexPath) {
+        let month = monthsShowing[index.section]
+        
+        // Get the date for today
+        let date = month.getDateForCell(indexPath: index)
+        
+        let day = NSCalendar.currentCalendar().components(.Day, fromDate: date).day
+        dateCell.dateLabel.text = "\(day)"
+        
+        if (dateIsSelected(date)) {
+            dateCell.style(dateIsSelected: true)
+        } else if (dateIsToday(date)) {
+            dateCell.style(dateIsToday: true)
+        } else {
+            dateCell.style()
+        }
+    }
+}
+
+internal extension Calendar {
+    
+    private func datesAreEqual(firstDate dateOne: NSDate, secondDate dateTwo: NSDate) -> Bool {
+        let calendar = NSCalendar.currentCalendar()
+        let firstComponents = calendar.components([.Day, .Month, .Year], fromDate: dateOne)
+        let secondComponents = calendar.components([.Day, .Month, .Year], fromDate: dateTwo)
+        
+        if (firstComponents.day == secondComponents.day && firstComponents.month == secondComponents.month && firstComponents.year == secondComponents.year) {
+            return true
+        }
+        
+        return false
+    }
+    
+    func dateIsSelected(date: NSDate) -> Bool {
+        if let selected = selectedDate {
+            return datesAreEqual(firstDate: date, secondDate: selected)
+        }
+        
+        return false
+    }
+    
+    func dateIsToday(date: NSDate) -> Bool {
+        return datesAreEqual(firstDate: date, secondDate: NSDate())
+    }
+    
 }
