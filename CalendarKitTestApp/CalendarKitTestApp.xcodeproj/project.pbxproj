@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C8543B681B33A4EC001D9A3A /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8B3D10E1B10A99D00B76982 /* ViewController.swift */; };
 		C85E20781B247F970080671E /* CalendarKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C85E20771B247F970080671E /* CalendarKit.framework */; };
 		C8B3D10D1B10A99D00B76982 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8B3D10C1B10A99D00B76982 /* AppDelegate.swift */; };
 		C8B3D10F1B10A99D00B76982 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8B3D10E1B10A99D00B76982 /* ViewController.swift */; };
@@ -226,6 +227,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C8543B681B33A4EC001D9A3A /* ViewController.swift in Sources */,
 				C8B3D1231B10A99D00B76982 /* CalendarKitTestAppTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
