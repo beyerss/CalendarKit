@@ -7,6 +7,8 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="Calendar" customModule="CalendarKit" customModuleProvider="target">
             <connections>
                 <outlet property="calendarCollectionView" destination="gyr-6F-ReH" id="VwR-36-c6a"/>
+                <outlet property="monthHeaderDivider" destination="tDW-IP-J3b" id="rOw-4X-lWP"/>
+                <outlet property="monthHeaderView" destination="4WT-zV-pJ4" id="go1-yn-iYy"/>
                 <outlet property="monthLabel" destination="yrZ-dK-ByF" id="YgC-ep-rWb"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
@@ -23,21 +25,29 @@
                             <rect key="frame" x="0.0" y="0.0" width="600" height="50"/>
                             <subviews>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="261" text="Month" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yrZ-dK-ByF">
-                                    <rect key="frame" x="275" y="15" width="49.5" height="20.5"/>
-                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                    <rect key="frame" x="266" y="12" width="68.5" height="26"/>
+                                    <fontDescription key="fontDescription" type="boldSystem" pointSize="22"/>
                                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     <nil key="highlightedColor"/>
+                                    <size key="shadowOffset" width="1" height="1"/>
                                 </label>
                             </subviews>
                             <color key="backgroundColor" red="0.20000000000000001" green="0.59999999999999998" blue="0.80000000000000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <constraints>
                                 <constraint firstItem="yrZ-dK-ByF" firstAttribute="centerX" secondItem="4WT-zV-pJ4" secondAttribute="centerX" id="InE-Dk-BaA"/>
-                                <constraint firstItem="yrZ-dK-ByF" firstAttribute="top" secondItem="4WT-zV-pJ4" secondAttribute="top" constant="15" id="d0k-Ls-TaI"/>
-                                <constraint firstAttribute="bottom" secondItem="yrZ-dK-ByF" secondAttribute="bottom" constant="15" id="mYh-oM-1KE"/>
+                                <constraint firstItem="yrZ-dK-ByF" firstAttribute="top" secondItem="4WT-zV-pJ4" secondAttribute="top" constant="12" id="d0k-Ls-TaI"/>
+                                <constraint firstAttribute="bottom" secondItem="yrZ-dK-ByF" secondAttribute="bottom" constant="12" id="mYh-oM-1KE"/>
+                            </constraints>
+                        </view>
+                        <view contentMode="scaleToFill" verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" placeholderIntrinsicWidth="600" placeholderIntrinsicHeight="1" translatesAutoresizingMaskIntoConstraints="NO" id="tDW-IP-J3b">
+                            <rect key="frame" x="0.0" y="50" width="600" height="1"/>
+                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="1" id="geB-nf-pJh"/>
                             </constraints>
                         </view>
                         <stackView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="255" fixedFrame="YES" placeholderIntrinsicWidth="600" placeholderIntrinsicHeight="110" distribution="fillEqually" spacing="2" translatesAutoresizingMaskIntoConstraints="NO" id="CSc-EA-oYj">
-                            <rect key="frame" x="0.0" y="50" width="600" height="110"/>
+                            <rect key="frame" x="0.0" y="51" width="600" height="110"/>
                             <subviews>
                                 <view contentMode="scaleToFill" verticalHuggingPriority="256" translatesAutoresizingMaskIntoConstraints="NO" id="5qF-u3-XRF">
                                     <rect key="frame" x="0.0" y="0.0" width="84" height="110"/>
@@ -94,7 +104,7 @@
                                     <rect key="frame" x="258" y="0.0" width="84" height="110"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="265" text="Wed" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xWl-V9-W7j">
-                                            <rect key="frame" x="24.5" y="5" width="35" height="99.5"/>
+                                            <rect key="frame" x="24" y="5" width="35" height="99.5"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                             <nil key="highlightedColor"/>
@@ -162,7 +172,7 @@
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                         </stackView>
                         <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" verticalHuggingPriority="240" fixedFrame="YES" pagingEnabled="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="gyr-6F-ReH">
-                            <rect key="frame" x="0.0" y="160" width="600" height="440"/>
+                            <rect key="frame" x="0.0" y="161" width="600" height="439"/>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="2" minimumInteritemSpacing="2" id="qbx-ua-W9S">
                                 <size key="itemSize" width="50" height="50"/>

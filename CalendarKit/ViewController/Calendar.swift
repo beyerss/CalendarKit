@@ -10,7 +10,9 @@ import UIKit
 
 public class Calendar: UIViewController {
 
+    @IBOutlet private weak var monthHeaderView: UIView!
     @IBOutlet private weak var monthLabel: UILabel!
+    @IBOutlet weak var monthHeaderDivider: UIView!
     @IBOutlet private weak var calendarCollectionView: UICollectionView!
     
     private var monthsShowing = Array<Month>()
@@ -38,6 +40,8 @@ public class Calendar: UIViewController {
         super.viewDidLoad()
         
         view.backgroundColor = CalendarDesignKit.calendarBackgroundColor
+        monthHeaderView.backgroundColor = CalendarDesignKit.calendarDateColor
+        monthHeaderDivider.backgroundColor = CalendarDesignKit.calendarBackgroundColor
         
         // create the date formatter used for displaying the month
         monthFormatter = NSDateFormatter()
@@ -196,16 +200,17 @@ extension Calendar: UICollectionViewDataSource {
         
         // Get the date for today
         let date = month.getDateForCell(indexPath: index)
+        let outsideOfMonth = month.isDateInMonth(date)
         
         let day = NSCalendar.currentCalendar().components(.Day, fromDate: date).day
         dateCell.dateLabel.text = "\(day)"
         
         if (dateIsSelected(date)) {
-            dateCell.style(dateIsSelected: true)
+            dateCell.style(dateIsSelected: true, dateIsOutsideOfMonth: outsideOfMonth)
         } else if (dateIsToday(date)) {
-            dateCell.style(dateIsToday: true)
+            dateCell.style(dateIsToday: true, dateIsOutsideOfMonth: outsideOfMonth)
         } else {
-            dateCell.style()
+            dateCell.style(dateIsOutsideOfMonth: outsideOfMonth)
         }
     }
 }

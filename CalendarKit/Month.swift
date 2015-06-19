@@ -172,4 +172,16 @@ extension Month {
         }
     }
     
+    func isDateInMonth(testDate: NSDate) -> Bool {
+        let calendar = NSCalendar.currentCalendar()
+        let components = calendar.components([.Month], fromDate: testDate)
+        let currentComponents = calendar.components([.Month], fromDate: date)
+        
+        if (components.month == currentComponents.month) {
+            return false
+        }
+        
+        return true
+    }
+    
 }

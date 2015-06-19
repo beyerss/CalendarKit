@@ -14,6 +14,17 @@ internal class BasicDateCollectionViewCell: UICollectionViewCell {
     private var dateIsToday: Bool = false
     private var dateIsWeekend: Bool = false
     private var dateIsSelected: Bool = false
+    private var dateIsOutsideOfMonth: Bool = false
+    
+    override var highlighted: Bool {
+        didSet {
+            if (highlighted) {
+                dateLabel.alpha = 0.3
+            } else {
+                dateLabel.alpha = 1.0
+            }
+        }
+    }
     
     override func prepareForReuse() {
         super.prepareForReuse()
@@ -32,15 +43,25 @@ internal class BasicDateCollectionViewCell: UICollectionViewCell {
         backgroundColor = CalendarDesignKit.dateBackgroundColor
     }
     
-    func style(dateIsToday today: Bool = false, dateIsWeekend weekend: Bool = false, dateIsSelected selected: Bool = false) {
+    func style(dateIsToday today: Bool = false, dateIsWeekend weekend: Bool = false, dateIsSelected selected: Bool = false, dateIsOutsideOfMonth outside: Bool = false) {
         dateIsToday = today
         dateIsWeekend = weekend
         dateIsSelected = selected
+        dateIsOutsideOfMonth = outside
         
-        if (dateIsSelected) {
+        if (dateIsOutsideOfMonth) {
+            backgroundColor = CalendarDesignKit.calendarDisabledDateColor
             dateLabel.textColor = UIColor.whiteColor()
+            dateLabel.alpha = 0.6
         } else {
-            dateLabel.textColor = UIColor.blackColor()
+            backgroundColor = CalendarDesignKit.dateBackgroundColor
+            dateLabel.alpha = 1.0
+            
+            if (dateIsSelected) {
+                dateLabel.textColor = UIColor.whiteColor()
+            } else {
+                dateLabel.textColor = UIColor.blackColor()
+            }
         }
         
         setNeedsDisplay()
@@ -50,7 +71,7 @@ internal class BasicDateCollectionViewCell: UICollectionViewCell {
         super.drawRect(rect)
         
         let smallerDimension = (rect.width < rect.height ? rect.width : rect.height)
-        let backgroundRect = CGRectMake(rect.width / 2 - smallerDimension / 2, rect.height / 2 - smallerDimension / 2, smallerDimension, smallerDimension)
+        let backgroundRect = CGRectMake(rect.width / 2 - smallerDimension / 2, dateLabel.frame.origin.y + (dateLabel.frame.height / 2) - smallerDimension / 2, smallerDimension, smallerDimension)
         
         if (dateIsSelected) {
             CalendarDesignKit.drawSelectedBackground(backgroundRect)
@@ -58,7 +79,7 @@ internal class BasicDateCollectionViewCell: UICollectionViewCell {
             if (dateIsToday) {
                 CalendarDesignKit.drawTodayBackground(backgroundRect)
             } else {
-                CalendarDesignKit.drawDefaultBackground(backgroundRect)
+//                CalendarDesignKit.drawDefaultBackground(backgroundRect)
             }
         }
     }
