@@ -8,7 +8,7 @@
 
 import Foundation
 
-@objc protocol CalendarDelegate {
+@objc public protocol CalendarDelegate {
     
     //MARK: These methods ask the user for more information
     

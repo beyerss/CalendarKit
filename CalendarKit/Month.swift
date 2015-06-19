@@ -12,14 +12,37 @@ internal class Month: NSObject {
     
     var date: NSDate
     
+    /**
+    * Creates a Month object for the date given
+    *
+    * @param monthDate Any date in the month that needs to be created
+    **/
     required init(monthDate: NSDate) {
         date = monthDate
     }
     
+    /**
+    * Returns the name of the month that this object represents.
+    * It will determine the actual string to return based on the 
+    * date formatter supplied
+    *
+    * @param formatter The formatter used to determine the string to return
+    * @return The string representation of the current month
+    **/
     func monthName(formatter: NSDateFormatter) -> String {
         return formatter.stringFromDate(date)
     }
     
+    /**
+    * Will determine if the current month is equal to the object specified.
+    * The items will be equal if the following conditions are met:
+    *   1) The object specified is a Month object
+    *   2) The month of the Month object specified is the same as the current Month's month
+    *   3) The year of the Month object specified is the same as the current Month's year
+    *
+    * @param object AnyObject that needs to be compared against the current Month
+    * @return A Bool. True if the two objects are equal, otherwise false.
+    **/
     override func isEqual(object: AnyObject?) -> Bool {
         if let otherMonth = object as? Month {
             let myComponents = NSCalendar.currentCalendar().components([.Month, .Year], fromDate: date)
@@ -40,6 +63,13 @@ internal class Month: NSObject {
 **/
 extension Month {
     
+    /**
+    * Convenience initializer so that a month can be created based
+    * on another month.
+    *
+    * @param otherMonth The base month used as a reference to create a new Month
+    * @param offset The number of months between the otherMonth and the desired month
+    **/
     convenience init(otherMonth: Month, offsetMonths offset: Int) {
         let date = NSCalendar.currentCalendar().dateByAddingUnit(.Month, value: offset, toDate: otherMonth.date, options: [])!
         self.init(monthDate: date)
@@ -92,7 +122,7 @@ extension Month {
         return day
     }
     
-    /*
+    /**
     * This returns the number of weeks for this month
     **/
     func weeksInMonth() -> Int {

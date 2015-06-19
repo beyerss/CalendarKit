@@ -12,7 +12,7 @@
 
 import UIKit
 
-public class CalendarDesignKit : NSObject {
+internal class CalendarDesignKit : NSObject {
 
     //// Cache
 
@@ -25,14 +25,14 @@ public class CalendarDesignKit : NSObject {
 
     //// Colors
 
-    public class var foregroundColor: UIColor { return Cache.foregroundColor }
-    public class var grayCircleColor: UIColor { return Cache.grayCircleColor }
-    public class var dateBackgroundColor: UIColor { return Cache.dateBackgroundColor }
-    public class var calendarBackgroundColor: UIColor { return Cache.calendarBackgroundColor }
+    internal class var foregroundColor: UIColor { return Cache.foregroundColor }
+    internal class var grayCircleColor: UIColor { return Cache.grayCircleColor }
+    internal class var dateBackgroundColor: UIColor { return Cache.dateBackgroundColor }
+    internal class var calendarBackgroundColor: UIColor { return Cache.calendarBackgroundColor }
 
     //// Drawing Methods
 
-    public class func drawSelectedBackground(frame: CGRect) {
+    internal class func drawSelectedBackground(frame: CGRect) {
 
         //// DateCircle Drawing
         var dateCirclePath = UIBezierPath(ovalInRect: CGRectMake(frame.minX + 8, frame.minY + 8, frame.width - 16, frame.height - 16))
@@ -40,7 +40,7 @@ public class CalendarDesignKit : NSObject {
         dateCirclePath.fill()
     }
 
-    public class func drawTodayBackground(frame: CGRect) {
+    internal class func drawTodayBackground(frame: CGRect) {
 
         //// DateCircle Drawing
         var dateCirclePath = UIBezierPath(ovalInRect: CGRectMake(frame.minX + 8, frame.minY + 8, frame.width - 16, frame.height - 16))
@@ -49,7 +49,7 @@ public class CalendarDesignKit : NSObject {
         dateCirclePath.stroke()
     }
 
-    public class func drawDefaultBackground(frame: CGRect) {
+    internal class func drawDefaultBackground(frame: CGRect) {
 
         //// DateCircle Drawing
         var dateCirclePath = UIBezierPath(ovalInRect: CGRectMake(frame.minX + 8, frame.minY + 8, frame.width - 16, frame.height - 16))

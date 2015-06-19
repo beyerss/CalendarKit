@@ -21,8 +21,10 @@ public class Calendar: UIViewController {
         }
     }
     
-    var selectedDate: NSDate?
+    public var selectedDate: NSDate?
     private var selectedCell: UICollectionViewCell?
+    
+    public var delegate: CalendarDelegate?
     
     internal init() {
         super.init(nibName: "Calendar", bundle: NSBundle(identifier: "com.beyersapps.CalendarKit"))
@@ -47,25 +49,43 @@ public class Calendar: UIViewController {
         calendarCollectionView.registerNib(xib, forCellWithReuseIdentifier: "BasicDateCell")
         
         // Set up data to start at the date 2 months ago
-        rebuildMonths()
+        rebuildMonths(currentMonthOnly: true)
+        // set current month label
     }
     
     override public func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         
+        self.calendarCollectionView.reloadData()
+        
         // We need to scroll to the second section. That is the center of the data that is showed
         // and helps us give the illusion of infinite scrolling
-        self.view.layoutIfNeeded()
-        calendarCollectionView.scrollToItemAtIndexPath(NSIndexPath(forItem: 0, inSection: 2), atScrollPosition: UICollectionViewScrollPosition.Left, animated: false)
+//        self.view.layoutIfNeeded()
+//        calendarCollectionView.scrollToItemAtIndexPath(NSIndexPath(forItem: 0, inSection: 2), atScrollPosition: UICollectionViewScrollPosition.Left, animated: false)
     }
     
-    private func rebuildMonths() {
+    public override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        rebuildMonths()
+        calendarCollectionView.reloadData()
+        calendarCollectionView.scrollToItemAtIndexPath(NSIndexPath(forItem: 0, inSection: 2), atScrollPosition: .Left, animated: false)
+    }
+    
+    private func rebuildMonths(currentMonthOnly currentOnly: Bool = false) {
         monthsShowing = Array<Month>()
-        monthsShowing.append(Month(otherMonth: currentMonth, offsetMonths: -2))
-        monthsShowing.append(Month(otherMonth: currentMonth, offsetMonths: -1))
-        monthsShowing.append(currentMonth)
-        monthsShowing.append(Month(otherMonth: currentMonth, offsetMonths: 1))
-        monthsShowing.append(Month(otherMonth: currentMonth, offsetMonths: 2))
+        
+        if (currentOnly) {
+            let tempMonth = currentMonth
+            currentMonth = tempMonth
+            monthsShowing.append(currentMonth)
+        } else {
+            monthsShowing.append(Month(otherMonth: currentMonth, offsetMonths: -2))
+            monthsShowing.append(Month(otherMonth: currentMonth, offsetMonths: -1))
+            monthsShowing.append(currentMonth)
+            monthsShowing.append(Month(otherMonth: currentMonth, offsetMonths: 1))
+            monthsShowing.append(Month(otherMonth: currentMonth, offsetMonths: 2))
+        }
     }
 
 }
@@ -98,6 +118,8 @@ public class Calendar: UIViewController {
             } else {
                 currentMonth = monthsShowing[4]
             }
+            
+            delegate?.calendar?(self, didScrollToDate: currentMonth.date, withNumberOfWeeks: currentMonth.weeksInMonth())
 
             rebuildMonths()
             calendarCollectionView.reloadData()
@@ -121,7 +143,9 @@ public class Calendar: UIViewController {
     public func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
         collectionView.deselectItemAtIndexPath(indexPath, animated: true)
         
-        selectedDate = monthsShowing[indexPath.section].getDateForCell(indexPath: indexPath)
+        let month = monthsShowing[indexPath.section]
+        
+        selectedDate = month.getDateForCell(indexPath: indexPath)
         if let previousSelected = selectedCell as? BasicDateCollectionViewCell {
             if let previousPath = collectionView.indexPathForCell(previousSelected) {
                 setupStyle(previousSelected, indexPath: previousPath)
@@ -133,6 +157,10 @@ public class Calendar: UIViewController {
         if let dateCell = collectionView.cellForItemAtIndexPath(indexPath) as? BasicDateCollectionViewCell {
             dateCell.style(dateIsSelected: true)
             selectedCell = dateCell
+        }
+        
+        if let date = selectedDate {
+            delegate?.calendar?(self, didSelectDate: date)
         }
     }
     
