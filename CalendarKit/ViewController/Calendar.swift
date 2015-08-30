@@ -28,7 +28,7 @@ public class Calendar: UIViewController {
     
     public var delegate: CalendarDelegate?
     
-    internal init() {
+    public init() {
         super.init(nibName: "Calendar", bundle: NSBundle(identifier: "com.beyersapps.CalendarKit"))
     }
 
