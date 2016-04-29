@@ -36,7 +36,7 @@ extension ViewController: CalendarDelegate {
     
     func calendar(calendar: Calendar, didSelectDate date: NSDate) {
         print("Current selected date: \(date)")
-//        dismissViewControllerAnimated(true, completion: nil)
+        dismissViewControllerAnimated(true, completion: nil)
     }
     
     func calendar(calendar: Calendar, didScrollToDate date: NSDate, withNumberOfWeeks weeks: Int) {

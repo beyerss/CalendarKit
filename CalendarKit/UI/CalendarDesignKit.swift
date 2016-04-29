@@ -41,7 +41,7 @@ public class CalendarDesignKit : NSObject {
     public class func drawSelectedBackground(frame: CGRect) {
 
         //// DateCircle Drawing
-        var dateCirclePath = UIBezierPath(ovalInRect: CGRectMake(frame.minX + 8, frame.minY + 8, frame.width - 16, frame.height - 16))
+        let dateCirclePath = UIBezierPath(ovalInRect: CGRectMake(frame.minX + 8, frame.minY + 8, frame.width - 16, frame.height - 16))
         CalendarDesignKit.calendarDateColor.setFill()
         dateCirclePath.fill()
     }
@@ -49,7 +49,7 @@ public class CalendarDesignKit : NSObject {
     public class func drawTodayBackground(frame: CGRect) {
 
         //// DateCircle Drawing
-        var dateCirclePath = UIBezierPath(ovalInRect: CGRectMake(frame.minX + 8, frame.minY + 8, frame.width - 16, frame.height - 16))
+        let dateCirclePath = UIBezierPath(ovalInRect: CGRectMake(frame.minX + 8, frame.minY + 8, frame.width - 16, frame.height - 16))
         CalendarDesignKit.calendarDateColor.setStroke()
         dateCirclePath.lineWidth = 3
         dateCirclePath.stroke()
@@ -58,7 +58,7 @@ public class CalendarDesignKit : NSObject {
     public class func drawDefaultBackground(frame: CGRect) {
 
         //// DateCircle Drawing
-        var dateCirclePath = UIBezierPath(ovalInRect: CGRectMake(frame.minX + 8, frame.minY + 8, frame.width - 16, frame.height - 16))
+        let dateCirclePath = UIBezierPath(ovalInRect: CGRectMake(frame.minX + 8, frame.minY + 8, frame.width - 16, frame.height - 16))
         CalendarDesignKit.grayCircleColor.setStroke()
         dateCirclePath.lineWidth = 3
         dateCirclePath.stroke()

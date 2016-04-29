@@ -9,22 +9,12 @@
 import UIKit
 
 public class Calendar: UIViewController {
-
-    @IBOutlet private weak var monthHeaderView: UIView!
-    @IBOutlet private weak var monthLabel: UILabel!
-    @IBOutlet weak var monthHeaderDivider: UIView!
     @IBOutlet private weak var calendarCollectionView: UICollectionView!
     
     private var monthsShowing = Array<Month>()
-    private var monthFormatter: NSDateFormatter!
-    private var currentMonth = Month(monthDate: NSDate()) {
-        didSet {
-            monthLabel.text = currentMonth.monthName(monthFormatter)
-        }
-    }
+    private var currentMonth = Month(monthDate: NSDate())
     
     public var selectedDate: NSDate?
-    private var selectedCell: UICollectionViewCell?
     
     public var delegate: CalendarDelegate?
     
@@ -40,32 +30,19 @@ public class Calendar: UIViewController {
         super.viewDidLoad()
         
         view.backgroundColor = CalendarDesignKit.calendarBackgroundColor
-        monthHeaderView.backgroundColor = CalendarDesignKit.calendarDateColor
-        monthHeaderDivider.backgroundColor = CalendarDesignKit.calendarBackgroundColor
-        
-        // create the date formatter used for displaying the month
-        monthFormatter = NSDateFormatter()
-        monthFormatter.dateFormat = "MMMM"
         
         // register cell
         let bundle = NSBundle(identifier: "com.beyersapps.CalendarKit")
-        let xib = UINib(nibName: "BasicDateCollectionViewCell", bundle: bundle)
-        calendarCollectionView.registerNib(xib, forCellWithReuseIdentifier: "BasicDateCell")
+        calendarCollectionView.registerNib(UINib(nibName: "CalendarMonth", bundle: bundle), forCellWithReuseIdentifier: "monthCell")
         
         // Set up data to start at the date 2 months ago
         rebuildMonths(currentMonthOnly: true)
-        // set current month label
     }
     
     override public func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         
         self.calendarCollectionView.reloadData()
-        
-        // We need to scroll to the second section. That is the center of the data that is showed
-        // and helps us give the illusion of infinite scrolling
-//        self.view.layoutIfNeeded()
-//        calendarCollectionView.scrollToItemAtIndexPath(NSIndexPath(forItem: 0, inSection: 2), atScrollPosition: UICollectionViewScrollPosition.Left, animated: false)
     }
     
     public override func viewDidAppear(animated: Bool) {
@@ -137,35 +114,13 @@ public class Calendar: UIViewController {
     
     public func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
         
-        let month = monthsShowing[indexPath.section]
-        
-        let rowsNeeded = month.weeksInMonth()
-        let dividerHeight = CGFloat((rowsNeeded - 1) * 2)
-        return CGSizeMake((calendarCollectionView.frame.size.width-12) / 7, (calendarCollectionView.frame.size.height - dividerHeight) / CGFloat(rowsNeeded))
+        // This should fill the entire frame of the collection view
+        return calendarCollectionView.frame.size
     }
     
     public func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
-        collectionView.deselectItemAtIndexPath(indexPath, animated: true)
-        
-        let month = monthsShowing[indexPath.section]
-        
-        selectedDate = month.getDateForCell(indexPath: indexPath)
-        if let previousSelected = selectedCell as? BasicDateCollectionViewCell {
-            if let previousPath = collectionView.indexPathForCell(previousSelected) {
-                setupStyle(previousSelected, indexPath: previousPath)
-            } else {
-                previousSelected.style()
-            }
-        }
-        
-        if let dateCell = collectionView.cellForItemAtIndexPath(indexPath) as? BasicDateCollectionViewCell {
-            dateCell.style(dateIsSelected: true)
-            selectedCell = dateCell
-        }
-        
-        if let date = selectedDate {
-            delegate?.calendar?(self, didSelectDate: date)
-        }
+        // Nothing happens here b/c we can only select individual cells
+        collectionView.deselectItemAtIndexPath(indexPath, animated: false)
     }
     
 }
@@ -173,11 +128,8 @@ public class Calendar: UIViewController {
 extension Calendar: UICollectionViewDataSource {
     
     public func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        
-        let month = monthsShowing[section]
-        
-        let cellCount = month.weeksInMonth() * 7
-        return cellCount
+        // We are showing one CalendarMonth cell for each section
+        return 1
     }
     
     public func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
@@ -186,59 +138,13 @@ extension Calendar: UICollectionViewDataSource {
     
     public func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         
-        // Get the cell
-        let cell = collectionView.dequeueReusableCellWithReuseIdentifier("BasicDateCell", forIndexPath: indexPath) as UICollectionViewCell
-        if let dateCell = cell as? BasicDateCollectionViewCell {
-            setupStyle(dateCell, indexPath: indexPath)
+        // Get the month cell
+        let cell = collectionView.dequeueReusableCellWithReuseIdentifier("monthCell", forIndexPath: indexPath)
+        if let month = cell as? CalendarMonth {
+            month.containingCalendar = self
+            month.monthToDisplay = monthsShowing[indexPath.section]
         }
-        
+     
         return cell
     }
-    
-    private func setupStyle(dateCell: BasicDateCollectionViewCell, indexPath index: NSIndexPath) {
-        let month = monthsShowing[index.section]
-        
-        // Get the date for today
-        let date = month.getDateForCell(indexPath: index)
-        let outsideOfMonth = month.isDateInMonth(date)
-        
-        let day = NSCalendar.currentCalendar().components(.Day, fromDate: date).day
-        dateCell.dateLabel.text = "\(day)"
-        
-        if (dateIsSelected(date)) {
-            dateCell.style(dateIsSelected: true, dateIsOutsideOfMonth: outsideOfMonth)
-        } else if (dateIsToday(date)) {
-            dateCell.style(dateIsToday: true, dateIsOutsideOfMonth: outsideOfMonth)
-        } else {
-            dateCell.style(dateIsOutsideOfMonth: outsideOfMonth)
-        }
-    }
-}
-
-internal extension Calendar {
-    
-    private func datesAreEqual(firstDate dateOne: NSDate, secondDate dateTwo: NSDate) -> Bool {
-        let calendar = NSCalendar.currentCalendar()
-        let firstComponents = calendar.components([.Day, .Month, .Year], fromDate: dateOne)
-        let secondComponents = calendar.components([.Day, .Month, .Year], fromDate: dateTwo)
-        
-        if (firstComponents.day == secondComponents.day && firstComponents.month == secondComponents.month && firstComponents.year == secondComponents.year) {
-            return true
-        }
-        
-        return false
-    }
-    
-    func dateIsSelected(date: NSDate) -> Bool {
-        if let selected = selectedDate {
-            return datesAreEqual(firstDate: date, secondDate: selected)
-        }
-        
-        return false
-    }
-    
-    func dateIsToday(date: NSDate) -> Bool {
-        return datesAreEqual(firstDate: date, secondDate: NSDate())
-    }
-    
 }

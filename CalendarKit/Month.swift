@@ -8,6 +8,8 @@
 
 import UIKit
 
+private let monthFormatter = MonthFormatter()
+
 internal class Month: NSObject {
     
     var date: NSDate
@@ -23,14 +25,11 @@ internal class Month: NSObject {
     
     /**
     * Returns the name of the month that this object represents.
-    * It will determine the actual string to return based on the 
-    * date formatter supplied
     *
-    * @param formatter The formatter used to determine the string to return
     * @return The string representation of the current month
     **/
-    func monthName(formatter: NSDateFormatter) -> String {
-        return formatter.stringFromDate(date)
+    func monthName() -> String {
+        return monthFormatter.formatter.stringFromDate(date)
     }
     
     /**
@@ -113,11 +112,7 @@ extension Month {
         components.day = 1
         components = calendar.components([.Day, .Month, .Year, .Weekday], fromDate: calendar.dateFromComponents(components)!)
         var day = components.weekday
-        if (day == 7) {
-            day = 0
-        } else {
-            day--
-        }
+        day -= 1
         
         return day
     }
@@ -134,15 +129,15 @@ extension Month {
         let remainder = totalDaysNeeded % 7
         
         if (remainder > 0) {
-            numberOfWeeks++
+            numberOfWeeks += 1
         }
         
         return numberOfWeeks
     }
     
-    func columnAtIndex(index: NSIndexPath) -> Int {
-        return index.row / weeksInMonth()
-    }
+//    func columnAtIndex(index: NSIndexPath) -> Int {
+//        return index.row / weeksInMonth()
+//    }
     
     func getDateForCell(indexPath path: NSIndexPath) -> NSDate {
         let calendar = NSCalendar.currentCalendar()
@@ -150,20 +145,20 @@ extension Month {
         var dayOfMonth = path.row
         let firstDay = firstDayOfWeek()
         // subtract the offset to account for the first day of the week
-        dayOfMonth -= firstDay
+        dayOfMonth -= (firstDay - 1)
         
         var dateToReturn: NSDate?
-        let column = columnAtIndex(path)
-        let row = path.row % weeksInMonth()
-        
-        let day = column - firstDay + 1 + (row * 7)
-        components.day = day
-        
+//        let column = columnAtIndex(path)
+//        let row = path.row % weeksInMonth()
+//        
+//        let day = column - firstDay + 1 + (row * 7)
+        components.day = dayOfMonth
+//
         // The date is in the current month
         let newDate = calendar.dateFromComponents(components)
-        
+
         dateToReturn = newDate
-        
+
         if let returnDate = dateToReturn {
             return returnDate
         } else {
@@ -183,5 +178,19 @@ extension Month {
         
         return true
     }
+    
+}
+
+/**
+ This is a singleton so that we only ever have to create one month formatter
+ */
+private class MonthFormatter {
+    
+    lazy var formatter: NSDateFormatter = {
+       let newFormatter = NSDateFormatter()
+        newFormatter.dateFormat = "MMMM"
+        
+        return newFormatter
+    }()
     
 }
