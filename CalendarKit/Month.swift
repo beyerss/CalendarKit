@@ -135,10 +135,6 @@ extension Month {
         return numberOfWeeks
     }
     
-//    func columnAtIndex(index: NSIndexPath) -> Int {
-//        return index.row / weeksInMonth()
-//    }
-    
     func getDateForCell(indexPath path: NSIndexPath) -> NSDate {
         let calendar = NSCalendar.currentCalendar()
         let components = calendar.components([.Day, .Month, .Year, .Weekday], fromDate: date)
@@ -148,12 +144,8 @@ extension Month {
         dayOfMonth -= (firstDay - 1)
         
         var dateToReturn: NSDate?
-//        let column = columnAtIndex(path)
-//        let row = path.row % weeksInMonth()
-//        
-//        let day = column - firstDay + 1 + (row * 7)
         components.day = dayOfMonth
-//
+
         // The date is in the current month
         let newDate = calendar.dateFromComponents(components)
 

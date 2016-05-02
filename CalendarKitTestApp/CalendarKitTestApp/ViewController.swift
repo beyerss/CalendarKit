@@ -11,9 +11,23 @@ import CalendarKit
 
 class ViewController: UIViewController {
 
+    @IBOutlet weak var textField: UITextField!
+    lazy var inputCalendar: Calendar = {
+        var config = CalendarConfiguration()
+        config.displayStyle = .InputView
+        config.dateTextStyle = .Center
+        
+        let calendar = Calendar(configuration: config)
+        return calendar
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
+        inputCalendar.delegate = self
+        inputCalendar.selectedDate = NSDate().dateByAddingTimeInterval(60*60*24)
+        
+        textField.inputView = inputCalendar.view
     }
 
     override func didReceiveMemoryWarning() {
@@ -36,7 +50,11 @@ extension ViewController: CalendarDelegate {
     
     func calendar(calendar: Calendar, didSelectDate date: NSDate) {
         print("Current selected date: \(date)")
-        dismissViewControllerAnimated(true, completion: nil)
+        if (calendar != inputCalendar) {
+            dismissViewControllerAnimated(true, completion: nil)
+        } else {
+            textField.resignFirstResponder()
+        }
     }
     
     func calendar(calendar: Calendar, didScrollToDate date: NSDate, withNumberOfWeeks weeks: Int) {

@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="8121.17" systemVersion="14D136" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="LKK-xd-2sb">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10116" systemVersion="15E65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="LKK-xd-2sb">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="8101.14"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
     </dependencies>
     <scenes>
         <!--View Controller-->
@@ -25,13 +26,24 @@
                                     </segue>
                                 </connections>
                             </button>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="RWx-fx-bxE">
+                                <rect key="frame" x="230" y="120" width="140" height="30"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="IqX-N7-oQL" firstAttribute="top" secondItem="rOR-Ww-unq" secondAttribute="bottom" constant="50" id="kzH-Mj-Qvj"/>
+                            <constraint firstItem="RWx-fx-bxE" firstAttribute="leading" secondItem="IqX-N7-oQL" secondAttribute="leading" id="mVz-bu-jsI"/>
                             <constraint firstItem="IqX-N7-oQL" firstAttribute="centerX" secondItem="oVF-aN-uRd" secondAttribute="centerX" id="oAW-Io-o7X"/>
+                            <constraint firstItem="RWx-fx-bxE" firstAttribute="top" secondItem="IqX-N7-oQL" secondAttribute="bottom" constant="20" id="oPI-UV-iJ2"/>
+                            <constraint firstItem="RWx-fx-bxE" firstAttribute="trailing" secondItem="IqX-N7-oQL" secondAttribute="trailing" id="ywe-3J-Hva"/>
                         </constraints>
                     </view>
+                    <connections>
+                        <outlet property="textField" destination="RWx-fx-bxE" id="lWe-2W-tPZ"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="yda-Z1-ZXF" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -40,7 +52,6 @@
         <!--Calendar-->
         <scene sceneID="Jil-AV-thI">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="47K-0v-Za4" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <viewController id="wgC-V3-c9g" customClass="Calendar" customModule="CalendarKit" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="sA8-tZ-mVb"/>
@@ -52,6 +63,7 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
                 </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="47K-0v-Za4" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1122" y="154"/>
         </scene>
