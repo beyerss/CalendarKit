@@ -322,38 +322,40 @@ extension CalendarMonth: UICollectionViewDelegate {
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
         collectionView.deselectItemAtIndexPath(indexPath, animated: false)
         
-        // Get the cell style and display style from configuration settings
-        let cellStyle: DateCellStyle
-        let displayStyle: DisplayStyle
-        if let calendar = containingCalendar {
-            cellStyle = calendar.configuration.dateTextStyle
-            displayStyle = calendar.configuration.displayStyle
-        } else {
-            displayStyle = .FullScreen
-            cellStyle = .Top
-        }
-        
-        // remember which date was selected
-        containingCalendar?.selectedDate = monthToDisplay.getDateForCell(indexPath: indexPath)
-        if let previousSelected = selectedCell as? BasicDateCollectionViewCell {
-            // update the style of the previously selected cell
-            if let previousPath = collectionView.indexPathForCell(previousSelected) {
-                setupStyle(dateCell: previousSelected, indexPath: previousPath)
+        if (indexPath.section == 2) {
+            // Get the cell style and display style from configuration settings
+            let cellStyle: DateCellStyle
+            let displayStyle: DisplayStyle
+            if let calendar = containingCalendar {
+                cellStyle = calendar.configuration.dateTextStyle
+                displayStyle = calendar.configuration.displayStyle
             } else {
-                previousSelected.style(textPlacement: cellStyle, displayStyle: displayStyle)
+                displayStyle = .FullScreen
+                cellStyle = .Top
             }
-        }
-        
-        if let dateCell = collectionView.cellForItemAtIndexPath(indexPath) as? BasicDateCollectionViewCell {
-            // update the style of the newly selected cell
-            dateCell.style(dateIsSelected: true, textPlacement: cellStyle, displayStyle: displayStyle)
-            // remember that this cell is now selected
-            selectedCell = dateCell
-        }
-        
-        // notify the delegate that a new date was selected
-        if let calendar = containingCalendar, date = calendar.selectedDate {
-            calendar.delegate?.calendar?(calendar, didSelectDate: date)
+            
+            // remember which date was selected
+            containingCalendar?.selectedDate = monthToDisplay.getDateForCell(indexPath: indexPath)
+            if let previousSelected = selectedCell as? BasicDateCollectionViewCell {
+                // update the style of the previously selected cell
+                if let previousPath = collectionView.indexPathForCell(previousSelected) {
+                    setupStyle(dateCell: previousSelected, indexPath: previousPath)
+                } else {
+                    previousSelected.style(textPlacement: cellStyle, displayStyle: displayStyle)
+                }
+            }
+            
+            if let dateCell = collectionView.cellForItemAtIndexPath(indexPath) as? BasicDateCollectionViewCell {
+                // update the style of the newly selected cell
+                dateCell.style(dateIsSelected: true, textPlacement: cellStyle, displayStyle: displayStyle)
+                // remember that this cell is now selected
+                selectedCell = dateCell
+            }
+            
+            // notify the delegate that a new date was selected
+            if let calendar = containingCalendar, date = calendar.selectedDate {
+                calendar.delegate?.calendar?(calendar, didSelectDate: date)
+            }
         }
     }
     
