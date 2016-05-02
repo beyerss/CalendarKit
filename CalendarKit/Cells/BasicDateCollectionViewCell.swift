@@ -17,7 +17,7 @@ class BasicDateCollectionViewCell: UICollectionViewCell {
     private var dateIsOutsideOfMonth: Bool = false
     private var verticalConstraint: NSLayoutConstraint?
     // We need to store the text placement because it is needed everytime drawRect is called
-    private var textPlacement: DateCellStyle = .Top
+    private var textPlacement: DateCellStyle = .TopCenter(verticalOffset: 17)
     
     /**
      Updates the dateLabel text so indicate when the cell was selected
@@ -49,7 +49,7 @@ class BasicDateCollectionViewCell: UICollectionViewCell {
         // set background color
         backgroundColor = CalendarDesignKit.dateBackgroundColor
         // style cell text placement
-        setupText(.Top)
+        setupText(.TopCenter(verticalOffset: 17))
         // set text font
         dateLabel.font = UIFont.preferredDateFont()
     }
@@ -114,12 +114,13 @@ class BasicDateCollectionViewCell: UICollectionViewCell {
         }
         
         switch placement {
-        case .Top:
+        case .TopCenter:
             // Pin the label to the top
             verticalConstraint = NSLayoutConstraint(item: dateLabel, attribute: .Top, relatedBy: .Equal, toItem: contentView, attribute: .Top, multiplier: 1.0, constant: 17)
-        case .Center:
+        case .CenterCenter:
             // Center the label vertically
             verticalConstraint = NSLayoutConstraint(item: dateLabel, attribute: .CenterY, relatedBy: .Equal, toItem: contentView, attribute: .CenterY, multiplier: 1.0, constant: 0)
+        default: break
         }
         
         // add new constraint
@@ -140,10 +141,12 @@ class BasicDateCollectionViewCell: UICollectionViewCell {
         
         // Figure out the background rect
         switch textPlacement {
-        case .Top:
+        case .TopCenter:
             backgroundRect = CGRectMake(rect.width / 2 - smallerDimension / 2, dateLabel.frame.origin.y + (dateLabel.frame.height / 2) - smallerDimension / 2, smallerDimension, smallerDimension)
-        case .Center:
+        case .CenterCenter:
             smallerDimension += 8
+            backgroundRect = CGRectMake(rect.width / 2 - smallerDimension / 2, dateLabel.frame.origin.y + (dateLabel.frame.height / 2) - smallerDimension / 2, smallerDimension, smallerDimension)
+        default:
             backgroundRect = CGRectMake(rect.width / 2 - smallerDimension / 2, dateLabel.frame.origin.y + (dateLabel.frame.height / 2) - smallerDimension / 2, smallerDimension, smallerDimension)
         }
         

@@ -28,7 +28,6 @@
 		C8B3D0F51B10A68A00B76982 /* Calendar.xib in Resources */ = {isa = PBXBuildFile; fileRef = C8B3D0F21B10A68A00B76982 /* Calendar.xib */; };
 		C8B3D0F61B10A68A00B76982 /* Calendar.xib in Resources */ = {isa = PBXBuildFile; fileRef = C8B3D0F21B10A68A00B76982 /* Calendar.xib */; };
 		C8B3D0FA1B10A85D00B76982 /* BasicDateCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8B3D0F81B10A85D00B76982 /* BasicDateCollectionViewCell.swift */; };
-		C8B3D0FB1B10A85D00B76982 /* BasicDateCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8B3D0F81B10A85D00B76982 /* BasicDateCollectionViewCell.swift */; };
 		C8B3D0FC1B10A85D00B76982 /* BasicDateCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = C8B3D0F91B10A85D00B76982 /* BasicDateCollectionViewCell.xib */; };
 		C8B3D0FD1B10A85D00B76982 /* BasicDateCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = C8B3D0F91B10A85D00B76982 /* BasicDateCollectionViewCell.xib */; };
 		C8CEF7E51B326C860002404C /* CalendarDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8CEF7E41B326C860002404C /* CalendarDelegate.swift */; };
@@ -327,7 +326,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				C8B3D0E71B10A60D00B76982 /* CalendarKitTests.swift in Sources */,
-				C8B3D0FB1B10A85D00B76982 /* BasicDateCollectionViewCell.swift in Sources */,
 				C8CEF7E61B326C860002404C /* CalendarDelegate.swift in Sources */,
 				C83AFA1E1B10B4FB00F04ADC /* CalendarDesignKit.swift in Sources */,
 				C85E207B1B249DF80080671E /* Month.swift in Sources */,

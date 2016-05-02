@@ -60,7 +60,7 @@ class CalendarMonth: UICollectionViewCell {
             switch config.displayStyle {
             case .FullScreen:
                 return kMonthHeaderHeight
-            case .PartialScreen:
+            case .Custom:
                 return kMonthHeaderHeight
             case .InputView:
                 return kMonthHeaderHeightAsInput
@@ -82,7 +82,7 @@ class CalendarMonth: UICollectionViewCell {
             switch config.displayStyle {
             case .FullScreen:
                 return kWeekdayHeaderHeight
-            case .PartialScreen:
+            case .Custom:
                 return kWeekdayHeaderHeight
             case .InputView:
                 return kWeekdayHeaderHeightAsInput
@@ -302,7 +302,7 @@ extension CalendarMonth: UICollectionViewDataSource {
             displayStyle = calendar.configuration.displayStyle
         } else {
             displayStyle = .FullScreen
-            cellStyle = .Top
+            cellStyle = .TopCenter(verticalOffset: 17)
         }
         
         // give the date cell the info it needs for styling properly
@@ -331,7 +331,7 @@ extension CalendarMonth: UICollectionViewDelegate {
                 displayStyle = calendar.configuration.displayStyle
             } else {
                 displayStyle = .FullScreen
-                cellStyle = .Top
+                cellStyle = .TopCenter(verticalOffset: 17)
             }
             
             // remember which date was selected

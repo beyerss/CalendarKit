@@ -31,13 +31,22 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fep-wK-vst">
+                                <rect key="frame" x="243" y="170" width="114" height="30"/>
+                                <state key="normal" title="Embed Calendar"/>
+                                <connections>
+                                    <action selector="showEmbeddedCalendar:" destination="LKK-xd-2sb" eventType="touchUpInside" id="NHl-qO-MMF"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="fep-wK-vst" firstAttribute="top" secondItem="RWx-fx-bxE" secondAttribute="bottom" constant="20" id="CzE-Fs-xq3"/>
                             <constraint firstItem="IqX-N7-oQL" firstAttribute="top" secondItem="rOR-Ww-unq" secondAttribute="bottom" constant="50" id="kzH-Mj-Qvj"/>
                             <constraint firstItem="RWx-fx-bxE" firstAttribute="leading" secondItem="IqX-N7-oQL" secondAttribute="leading" id="mVz-bu-jsI"/>
                             <constraint firstItem="IqX-N7-oQL" firstAttribute="centerX" secondItem="oVF-aN-uRd" secondAttribute="centerX" id="oAW-Io-o7X"/>
                             <constraint firstItem="RWx-fx-bxE" firstAttribute="top" secondItem="IqX-N7-oQL" secondAttribute="bottom" constant="20" id="oPI-UV-iJ2"/>
+                            <constraint firstItem="fep-wK-vst" firstAttribute="centerX" secondItem="oVF-aN-uRd" secondAttribute="centerX" id="y8N-zD-lCO"/>
                             <constraint firstItem="RWx-fx-bxE" firstAttribute="trailing" secondItem="IqX-N7-oQL" secondAttribute="trailing" id="ywe-3J-Hva"/>
                         </constraints>
                     </view>

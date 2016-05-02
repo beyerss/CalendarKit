@@ -22,7 +22,7 @@ public class Calendar: UIViewController {
     // The delegate to notify of events
     public var delegate: CalendarDelegate?
     // The configuration for the calendar
-    var configuration = CalendarConfiguration()
+    var configuration = CalendarConfiguration.FullScreenConfiguration()
     
     public init(configuration: CalendarConfiguration? = nil) {
         super.init(nibName: "Calendar", bundle: NSBundle(identifier: "com.beyersapps.CalendarKit"))

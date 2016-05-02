@@ -13,13 +13,11 @@ class ViewController: UIViewController {
 
     @IBOutlet weak var textField: UITextField!
     lazy var inputCalendar: Calendar = {
-        var config = CalendarConfiguration()
-        config.displayStyle = .InputView
-        config.dateTextStyle = .Center
-        
-        let calendar = Calendar(configuration: config)
+        let calendar = Calendar(configuration: CalendarConfiguration.InputViewConfiguration())
         return calendar
     }()
+    
+    var embeddedCalendar: Calendar?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -41,6 +39,26 @@ class ViewController: UIViewController {
             
             // tell the calendar to start with tomorrow selected
             calendar.selectedDate = NSDate().dateByAddingTimeInterval(60*60*24)
+        }
+    }
+    
+    @IBAction func showEmbeddedCalendar(sender: AnyObject) {
+        if let calendar = embeddedCalendar {
+            calendar.view.removeFromSuperview()
+            calendar.removeFromParentViewController()
+            embeddedCalendar = nil
+        } else {
+            var config = CalendarConfiguration(displayStyle: .Custom, dateTextStyle: .CenterCenter)
+            embeddedCalendar = Calendar(configuration: config)
+            
+            guard let calendar = embeddedCalendar else { return }
+            calendar.view.translatesAutoresizingMaskIntoConstraints = false
+            
+            self.addChildViewController(calendar)
+            self.view.addSubview(calendar.view)
+            
+            self.view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("|-(25)-[calendar]-(25)-|", options: NSLayoutFormatOptions.AlignAllLeft, metrics: nil, views: ["calendar": calendar.view]))
+            self.view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[calendar(300)]-(25)-|", options: .AlignAllBottom, metrics: nil, views: ["calendar": calendar.view]))
         }
     }
 
