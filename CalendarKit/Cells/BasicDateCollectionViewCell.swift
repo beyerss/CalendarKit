@@ -66,7 +66,7 @@ class BasicDateCollectionViewCell: UICollectionViewCell {
      @param textPlacement Specifies the position of the text in the cell
      @param displayStyle Specifies the style of calendar that is being displayed. This will change the text size and the size of the circle that are being displayed.
     */
-    func style(dateIsToday today: Bool = false, dateIsWeekend weekend: Bool = false, dateIsSelected selected: Bool = false, dateIsOutsideOfMonth outside: Bool = false, textPlacement: DateCellStyle, displayStyle: DisplayStyle, circleSizeOffset: CGFloat?) {
+    func style(dateIsToday today: Bool = false, dateIsWeekend weekend: Bool = false, dateIsSelected selected: Bool = false, dateIsOutsideOfMonth outside: Bool = false, textPlacement: DateCellStyle, font: UIFont, circleSizeOffset: CGFloat?) {
         // store passed in parameters
         dateIsToday = today
         dateIsWeekend = weekend
@@ -97,12 +97,7 @@ class BasicDateCollectionViewCell: UICollectionViewCell {
         setupText(textPlacement)
         
         // Set the font and size
-        switch displayStyle {
-        case .InputView:
-            dateLabel.font = UIFont.preferredInputViewDateFont()
-        default:
-            dateLabel.font = UIFont.preferredDateFont()
-        }
+        dateLabel.font = font
         
         setNeedsDisplay()
     }

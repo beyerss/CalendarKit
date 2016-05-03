@@ -17,19 +17,5 @@ class WeekdayHeaderCollectionViewCell: UICollectionViewCell {
         
         dayNameLabel.font = UIFont.preferredWeekdayHeaderFont()
     }
-    /**
-     Updates the font based on the style.
-     
-     @param displayStyle The style for the calendar
-     */
-    func styleCell(displayStyle style: DisplayStyle) {
-        // update font based on given style
-        switch style {
-        case .InputView:
-            dayNameLabel.font = UIFont.preferredInputViewWeekdayHeaderFont()
-        default:
-            dayNameLabel.font = UIFont.preferredWeekdayHeaderFont()
-        }
-    }
 
 }

@@ -210,7 +210,7 @@ extension CalendarMonth: UICollectionViewDataSource {
             monthHeader.monthName.text = monthToDisplay.monthName()
             
             if let calendar = containingCalendar {
-                monthHeader.styleCell(displayStyle: calendar.configuration.displayStyle)
+                monthHeader.monthName.font = calendar.configuration.monthHeaderFont
             }
         }
         
@@ -254,7 +254,7 @@ extension CalendarMonth: UICollectionViewDataSource {
             
             if let calendar = containingCalendar {
                 // style the cell based on the configuration settings
-                weekdayHeader.styleCell(displayStyle: calendar.configuration.displayStyle)
+                weekdayHeader.dayNameLabel.font = calendar.configuration.dayHeaderFont
             }
         }
         
@@ -298,23 +298,26 @@ extension CalendarMonth: UICollectionViewDataSource {
         let cellStyle: DateCellStyle
         let displayStyle: DisplayStyle
         var circleSizeOffset: CGFloat?
+        let font: UIFont
         
         if let calendar = containingCalendar {
             cellStyle = calendar.configuration.dateTextStyle
             displayStyle = calendar.configuration.displayStyle
             circleSizeOffset = calendar.configuration.dateCircleSizeOffset
+            font = calendar.configuration.dateLabelFont
         } else {
             displayStyle = .FullScreen
             cellStyle = .TopCenter(verticalOffset: 17)
+            font = UIFont.preferredDateFont()
         }
         
         // give the date cell the info it needs for styling properly
         if (dateIsSelected(date)) {
-            dateCell.style(dateIsSelected: true, dateIsOutsideOfMonth: outsideOfMonth, textPlacement: cellStyle, displayStyle: displayStyle, circleSizeOffset: circleSizeOffset)
+            dateCell.style(dateIsSelected: true, dateIsOutsideOfMonth: outsideOfMonth, textPlacement: cellStyle, font: font, circleSizeOffset: circleSizeOffset)
         } else if (dateIsToday(date)) {
-            dateCell.style(dateIsToday: true, dateIsOutsideOfMonth: outsideOfMonth, textPlacement: cellStyle, displayStyle: displayStyle, circleSizeOffset: circleSizeOffset)
+            dateCell.style(dateIsToday: true, dateIsOutsideOfMonth: outsideOfMonth, textPlacement: cellStyle, font: font, circleSizeOffset: circleSizeOffset)
         } else {
-            dateCell.style(dateIsOutsideOfMonth: outsideOfMonth, textPlacement: cellStyle, displayStyle: displayStyle, circleSizeOffset: circleSizeOffset)
+            dateCell.style(dateIsOutsideOfMonth: outsideOfMonth, textPlacement: cellStyle, font: font, circleSizeOffset: circleSizeOffset)
         }
     }
     
@@ -340,20 +343,29 @@ extension CalendarMonth: UICollectionViewDelegate {
                 cellStyle = .TopCenter(verticalOffset: 17)
             }
             
+            // get the font to use
+            let font: UIFont
+            if let containingCalendar = containingCalendar {
+                font = containingCalendar.configuration.dateLabelFont
+            } else {
+                font = UIFont.preferredDateFont()
+            }
+            
             // remember which date was selected
             containingCalendar?.selectedDate = monthToDisplay.getDateForCell(indexPath: indexPath)
             if let previousSelected = selectedCell as? BasicDateCollectionViewCell {
+                
                 // update the style of the previously selected cell
                 if let previousPath = collectionView.indexPathForCell(previousSelected) {
                     setupStyle(dateCell: previousSelected, indexPath: previousPath)
                 } else {
-                    previousSelected.style(textPlacement: cellStyle, displayStyle: displayStyle, circleSizeOffset: circleOffset)
+                    previousSelected.style(textPlacement: cellStyle, font: font, circleSizeOffset: circleOffset)
                 }
             }
             
             if let dateCell = collectionView.cellForItemAtIndexPath(indexPath) as? BasicDateCollectionViewCell {
                 // update the style of the newly selected cell
-                dateCell.style(dateIsSelected: true, textPlacement: cellStyle, displayStyle: displayStyle, circleSizeOffset: circleOffset)
+                dateCell.style(dateIsSelected: true, textPlacement: cellStyle, font: font, circleSizeOffset: circleOffset)
                 // remember that this cell is now selected
                 selectedCell = dateCell
             }

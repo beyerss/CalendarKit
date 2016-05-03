@@ -49,22 +49,28 @@ public struct CalendarConfiguration {
     var displayStyle: DisplayStyle
     var dateTextStyle: DateCellStyle
     var dateCircleSizeOffset: CGFloat?
+    var monthHeaderFont: UIFont
+    var dayHeaderFont: UIFont
+    var dateLabelFont: UIFont
     
     public static func FullScreenConfiguration() -> CalendarConfiguration {
-        return CalendarConfiguration(displayStyle: .FullScreen, dateTextStyle: .TopCenter(verticalOffset: 17))
+        return CalendarConfiguration(displayStyle: .FullScreen, dateTextStyle: .TopCenter(verticalOffset: 17), monthHeaderFont: UIFont.preferredMonthHeaderFont(), dayHeaderFont: UIFont.preferredWeekdayHeaderFont(), dateLabelFont: UIFont.preferredDateFont())
     }
     
     public static func InputViewConfiguration() -> CalendarConfiguration {
-        return CalendarConfiguration(displayStyle: .InputView, dateTextStyle: .CenterCenter, dateCircleSizeOffset: 8)
+        return CalendarConfiguration(displayStyle: .InputView, dateTextStyle: .CenterCenter, dateCircleSizeOffset: 8, monthHeaderFont: UIFont.preferredInputViewMonthHeaderFont(), dayHeaderFont: UIFont.preferredInputViewWeekdayHeaderFont(), dateLabelFont: UIFont.preferredInputViewDateFont())
     }
     
     /**
      Initializer to setup the configuration.
     */
-    public init(displayStyle: DisplayStyle, dateTextStyle: DateCellStyle, dateCircleSizeOffset: CGFloat? = nil) {
+    public init(displayStyle: DisplayStyle, dateTextStyle: DateCellStyle, dateCircleSizeOffset: CGFloat? = nil, monthHeaderFont: UIFont, dayHeaderFont: UIFont, dateLabelFont: UIFont) {
         self.displayStyle = displayStyle
         self.dateTextStyle = dateTextStyle
         self.dateCircleSizeOffset = dateCircleSizeOffset
+        self.monthHeaderFont = monthHeaderFont
+        self.dayHeaderFont = dayHeaderFont
+        self.dateLabelFont = dateLabelFont
     }
     
 }

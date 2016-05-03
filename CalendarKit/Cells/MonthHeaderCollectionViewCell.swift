@@ -18,20 +18,5 @@ class MonthHeaderCollectionViewCell: UICollectionViewCell {
         // Set default font style
         monthName.font = UIFont.preferredMonthHeaderFont()
     }
-    
-    /**
-     Updates the font based on the style.
-     
-     @param displayStyle The style for the calendar
-    */
-    func styleCell(displayStyle style: DisplayStyle) {
-        // update font based on given style
-        switch style {
-        case .InputView:
-            monthName.font = UIFont.preferredInputViewMonthHeaderFont()
-        default:
-            monthName.font = UIFont.preferredMonthHeaderFont()
-        }
-    }
 
 }
