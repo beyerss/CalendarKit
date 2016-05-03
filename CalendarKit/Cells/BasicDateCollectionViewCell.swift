@@ -16,8 +16,10 @@ class BasicDateCollectionViewCell: UICollectionViewCell {
     private var dateIsSelected: Bool = false
     private var dateIsOutsideOfMonth: Bool = false
     private var verticalConstraint: NSLayoutConstraint?
+    private var horizontalConstraint: NSLayoutConstraint?
     // We need to store the text placement because it is needed everytime drawRect is called
     private var textPlacement: DateCellStyle = .TopCenter(verticalOffset: 17)
+    private var circleSizeOffset: CGFloat?
     
     /**
      Updates the dateLabel text so indicate when the cell was selected
@@ -49,7 +51,7 @@ class BasicDateCollectionViewCell: UICollectionViewCell {
         // set background color
         backgroundColor = CalendarDesignKit.dateBackgroundColor
         // style cell text placement
-        setupText(.TopCenter(verticalOffset: 17))
+        setupText(textPlacement)
         // set text font
         dateLabel.font = UIFont.preferredDateFont()
     }
@@ -64,13 +66,14 @@ class BasicDateCollectionViewCell: UICollectionViewCell {
      @param textPlacement Specifies the position of the text in the cell
      @param displayStyle Specifies the style of calendar that is being displayed. This will change the text size and the size of the circle that are being displayed.
     */
-    func style(dateIsToday today: Bool = false, dateIsWeekend weekend: Bool = false, dateIsSelected selected: Bool = false, dateIsOutsideOfMonth outside: Bool = false, textPlacement: DateCellStyle, displayStyle: DisplayStyle) {
+    func style(dateIsToday today: Bool = false, dateIsWeekend weekend: Bool = false, dateIsSelected selected: Bool = false, dateIsOutsideOfMonth outside: Bool = false, textPlacement: DateCellStyle, displayStyle: DisplayStyle, circleSizeOffset: CGFloat?) {
         // store passed in parameters
         dateIsToday = today
         dateIsWeekend = weekend
         dateIsSelected = selected
         dateIsOutsideOfMonth = outside
         self.textPlacement = textPlacement
+        self.circleSizeOffset = circleSizeOffset
         
         if (dateIsOutsideOfMonth) {
             // Style dates outside of the current month
@@ -109,23 +112,67 @@ class BasicDateCollectionViewCell: UICollectionViewCell {
     */
     private func setupText(placement: DateCellStyle) {
         // remove the old constraint if it exists - this could happen with cell reuse
-        if let verticalConstraint = verticalConstraint {
-            contentView.removeConstraint(verticalConstraint)
+        if let verticalConstraint = verticalConstraint, horizontalConstraint = horizontalConstraint {
+            contentView.removeConstraints([verticalConstraint, horizontalConstraint])
         }
         
         switch placement {
-        case .TopCenter:
-            // Pin the label to the top
-            verticalConstraint = NSLayoutConstraint(item: dateLabel, attribute: .Top, relatedBy: .Equal, toItem: contentView, attribute: .Top, multiplier: 1.0, constant: 17)
+        case .TopLeft(verticalOffset: let vOffset, horizontalOffset: let hOffset):
+            verticalConstraint = makeVerticalConstraint(padding: vOffset)
+            horizontalConstraint = makeHorizontalConstraint(padding: hOffset)
+        case .TopCenter(verticalOffset: let offset):
+            verticalConstraint = makeVerticalConstraint(padding: offset)
+            horizontalConstraint = makeHorizontalConstraint(centered: true)
+        case .TopRight(verticalOffset: let vOffset, horizontalOffset: let hOffset):
+            verticalConstraint = makeVerticalConstraint(padding: vOffset)
+            horizontalConstraint = makeHorizontalConstraint(padding: hOffset, pinnedToLeft: false)
+        case .CenterLeft(horizontalOffset: let hOffset):
+            verticalConstraint = makeVerticalConstraint(centered: true)
+            horizontalConstraint = makeHorizontalConstraint(padding: hOffset)
         case .CenterCenter:
-            // Center the label vertically
-            verticalConstraint = NSLayoutConstraint(item: dateLabel, attribute: .CenterY, relatedBy: .Equal, toItem: contentView, attribute: .CenterY, multiplier: 1.0, constant: 0)
-        default: break
+            verticalConstraint = makeVerticalConstraint(centered: true)
+            horizontalConstraint = makeHorizontalConstraint(centered: true)
+        case .CenterRight(horizontalOffset: let hOffset):
+            verticalConstraint = makeVerticalConstraint(centered: true)
+            horizontalConstraint = makeHorizontalConstraint(padding: hOffset, pinnedToLeft: false)
+        case .BottomLeft(verticalOffset: let vOffset, horizontalOffset: let hOffset):
+            verticalConstraint = makeVerticalConstraint(padding: vOffset, pinnedToTop: false)
+            horizontalConstraint = makeHorizontalConstraint(padding: hOffset)
+        case .BottomCenter(verticalOffset: let vOffset):
+            verticalConstraint = makeVerticalConstraint(padding: vOffset, pinnedToTop: false)
+            horizontalConstraint = makeHorizontalConstraint(centered: true)
+        case .BottomRight(verticalOffset: let vOffset, horizontalOffset: let hOffset):
+            verticalConstraint = makeVerticalConstraint(padding: vOffset, pinnedToTop: false)
+            horizontalConstraint = makeHorizontalConstraint(padding: hOffset, pinnedToLeft: false)
         }
         
         // add new constraint
-        if let verticalConstraint = verticalConstraint {
-            contentView.addConstraint(verticalConstraint)
+        if let verticalConstraint = verticalConstraint, horizontalConstraint = horizontalConstraint {
+            contentView.addConstraints([verticalConstraint, horizontalConstraint])
+        }
+    }
+    
+    private func makeVerticalConstraint(padding padding: CGFloat = 0.0, centered: Bool = false, pinnedToTop: Bool = true) -> NSLayoutConstraint {
+        if (centered) {
+            return NSLayoutConstraint(item: dateLabel, attribute: .CenterY, relatedBy: .Equal, toItem: contentView, attribute: .CenterY, multiplier: 1.0, constant: 0)
+        } else {
+            if (pinnedToTop) {
+                return NSLayoutConstraint(item: dateLabel, attribute: .Top, relatedBy: .Equal, toItem: contentView, attribute: .Top, multiplier: 1.0, constant: padding)
+            } else {
+                return NSLayoutConstraint(item: contentView, attribute: .Bottom, relatedBy: .Equal, toItem: dateLabel, attribute: .Bottom, multiplier: 1.0, constant: padding)
+            }
+        }
+    }
+    
+    private func makeHorizontalConstraint(padding padding: CGFloat = 0.0, centered: Bool = false, pinnedToLeft: Bool = true) -> NSLayoutConstraint {
+        if (centered) {
+            return NSLayoutConstraint(item: dateLabel, attribute: .CenterX, relatedBy: .Equal, toItem: contentView, attribute: .CenterX, multiplier: 1.0, constant: 0)
+        } else {
+            if (pinnedToLeft) {
+                return NSLayoutConstraint(item: dateLabel, attribute: .Left, relatedBy: .Equal, toItem: contentView, attribute: .Left, multiplier: 1.0, constant: padding)
+            } else {
+                return NSLayoutConstraint(item: contentView, attribute: .Right, relatedBy: .Equal, toItem: dateLabel, attribute: .Right, multiplier: 1.0, constant: padding)
+            }
         }
     }
     
@@ -136,26 +183,24 @@ class BasicDateCollectionViewCell: UICollectionViewCell {
         super.drawRect(rect)
         
         // figure out the limiting dimention (height or width)
-        var smallerDimension = (rect.width < rect.height ? rect.width : rect.height)
-        let backgroundRect: CGRect
+        var smallerDimension = (bounds.width < bounds.height ? bounds.width : bounds.height)
         
-        // Figure out the background rect
-        switch textPlacement {
-        case .TopCenter:
-            backgroundRect = CGRectMake(rect.width / 2 - smallerDimension / 2, dateLabel.frame.origin.y + (dateLabel.frame.height / 2) - smallerDimension / 2, smallerDimension, smallerDimension)
-        case .CenterCenter:
-            smallerDimension += 8
-            backgroundRect = CGRectMake(rect.width / 2 - smallerDimension / 2, dateLabel.frame.origin.y + (dateLabel.frame.height / 2) - smallerDimension / 2, smallerDimension, smallerDimension)
-        default:
-            backgroundRect = CGRectMake(rect.width / 2 - smallerDimension / 2, dateLabel.frame.origin.y + (dateLabel.frame.height / 2) - smallerDimension / 2, smallerDimension, smallerDimension)
+        // change the smallerDimension if the circle size is setup to be changed in the config
+        if let circleSizeOffset = circleSizeOffset {
+            smallerDimension += circleSizeOffset
         }
+        
+        // frame of date text
+        let dateFrame = dateLabel.frame
+        
+        let backgroundRect = CGRectMake(dateFrame.origin.x + (dateFrame.width / 2) - (smallerDimension / 2), dateFrame.origin.y + (dateFrame.height / 2) - (smallerDimension / 2), smallerDimension, smallerDimension)
         
         // Draw the circle if needed
         if (dateIsSelected) {
-            CalendarDesignKit.drawSelectedBackground(backgroundRect)
+            CalendarDesignKit.drawSelectedBackground(frame: backgroundRect)
         } else {
             if (dateIsToday) {
-                CalendarDesignKit.drawTodayBackground(backgroundRect)
+                CalendarDesignKit.drawTodayBackground(frame: backgroundRect)
             }
         }
     }

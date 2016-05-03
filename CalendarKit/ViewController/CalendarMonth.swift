@@ -297,9 +297,12 @@ extension CalendarMonth: UICollectionViewDataSource {
         // figure out thecell style and display style from the configuration settings
         let cellStyle: DateCellStyle
         let displayStyle: DisplayStyle
+        var circleSizeOffset: CGFloat?
+        
         if let calendar = containingCalendar {
             cellStyle = calendar.configuration.dateTextStyle
             displayStyle = calendar.configuration.displayStyle
+            circleSizeOffset = calendar.configuration.dateCircleSizeOffset
         } else {
             displayStyle = .FullScreen
             cellStyle = .TopCenter(verticalOffset: 17)
@@ -307,11 +310,11 @@ extension CalendarMonth: UICollectionViewDataSource {
         
         // give the date cell the info it needs for styling properly
         if (dateIsSelected(date)) {
-            dateCell.style(dateIsSelected: true, dateIsOutsideOfMonth: outsideOfMonth, textPlacement: cellStyle, displayStyle: displayStyle)
+            dateCell.style(dateIsSelected: true, dateIsOutsideOfMonth: outsideOfMonth, textPlacement: cellStyle, displayStyle: displayStyle, circleSizeOffset: circleSizeOffset)
         } else if (dateIsToday(date)) {
-            dateCell.style(dateIsToday: true, dateIsOutsideOfMonth: outsideOfMonth, textPlacement: cellStyle, displayStyle: displayStyle)
+            dateCell.style(dateIsToday: true, dateIsOutsideOfMonth: outsideOfMonth, textPlacement: cellStyle, displayStyle: displayStyle, circleSizeOffset: circleSizeOffset)
         } else {
-            dateCell.style(dateIsOutsideOfMonth: outsideOfMonth, textPlacement: cellStyle, displayStyle: displayStyle)
+            dateCell.style(dateIsOutsideOfMonth: outsideOfMonth, textPlacement: cellStyle, displayStyle: displayStyle, circleSizeOffset: circleSizeOffset)
         }
     }
     
@@ -326,9 +329,12 @@ extension CalendarMonth: UICollectionViewDelegate {
             // Get the cell style and display style from configuration settings
             let cellStyle: DateCellStyle
             let displayStyle: DisplayStyle
+            var circleOffset: CGFloat?
+            
             if let calendar = containingCalendar {
                 cellStyle = calendar.configuration.dateTextStyle
                 displayStyle = calendar.configuration.displayStyle
+                circleOffset = calendar.configuration.dateCircleSizeOffset
             } else {
                 displayStyle = .FullScreen
                 cellStyle = .TopCenter(verticalOffset: 17)
@@ -341,13 +347,13 @@ extension CalendarMonth: UICollectionViewDelegate {
                 if let previousPath = collectionView.indexPathForCell(previousSelected) {
                     setupStyle(dateCell: previousSelected, indexPath: previousPath)
                 } else {
-                    previousSelected.style(textPlacement: cellStyle, displayStyle: displayStyle)
+                    previousSelected.style(textPlacement: cellStyle, displayStyle: displayStyle, circleSizeOffset: circleOffset)
                 }
             }
             
             if let dateCell = collectionView.cellForItemAtIndexPath(indexPath) as? BasicDateCollectionViewCell {
                 // update the style of the newly selected cell
-                dateCell.style(dateIsSelected: true, textPlacement: cellStyle, displayStyle: displayStyle)
+                dateCell.style(dateIsSelected: true, textPlacement: cellStyle, displayStyle: displayStyle, circleSizeOffset: circleOffset)
                 // remember that this cell is now selected
                 selectedCell = dateCell
             }

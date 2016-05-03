@@ -48,7 +48,7 @@ class ViewController: UIViewController {
             calendar.removeFromParentViewController()
             embeddedCalendar = nil
         } else {
-            var config = CalendarConfiguration(displayStyle: .Custom, dateTextStyle: .CenterCenter)
+            let config = CalendarConfiguration(displayStyle: .Custom, dateTextStyle: .TopLeft(verticalOffset: 0, horizontalOffset: 6), dateCircleSizeOffset: -7)
             embeddedCalendar = Calendar(configuration: config)
             
             guard let calendar = embeddedCalendar else { return }

@@ -25,44 +25,46 @@ public enum DisplayStyle {
  */
 public enum DateCellStyle {
     // Puts the date text near the top of the cell at a constant distance from the top and centered horizontally.
-    case TopCenter(verticalOffset: Int)
+    case TopCenter(verticalOffset: CGFloat)
     // Puts the date text near the top-left of the cell at a constant distance from the top and a constant distance from the left.
-    case TopLeft(verticalOffset: Int, horizontalOffset: Int)
+    case TopLeft(verticalOffset: CGFloat, horizontalOffset: CGFloat)
     // Puts the date text near the top-right of the cell at a constant distance from the top and a constant distance from the right.
-    case TopRight(verticalOffset: Int, horizontalOffset: Int)
+    case TopRight(verticalOffset: CGFloat, horizontalOffset: CGFloat)
     // Puts the date text centered vertically and horizontally in the date cell.
     case CenterCenter
     // Puts the date text near the left of the cell centered vertically and a constant distance from the left.
-    case CenterLeft(horizontalOffset: Int)
+    case CenterLeft(horizontalOffset: CGFloat)
     // Puts the date text near the right of the cell centered vertically and a constant distance from the right.
-    case CenterRight(horizontalOffset: Int)
+    case CenterRight(horizontalOffset: CGFloat)
     // Puts the date text near the bottom of the cell at a constant distance from the bottom and centered horizontally.
-    case BottomCenter(verticalOffset: Int)
+    case BottomCenter(verticalOffset: CGFloat)
     // Puts the date text near the bottom-left of the cell at a constant distance from the bottom and a constant distance from the left.
-    case BottomLeft(verticalOffset: Int, horizontalOffset: Int)
+    case BottomLeft(verticalOffset: CGFloat, horizontalOffset: CGFloat)
     // Puts the date text near the bottom-right of the cell at a constant distance from the bottom and a constant distance from the right.
-    case BottomRight(verticalOffset: Int, horizontalOffset: Int)
+    case BottomRight(verticalOffset: CGFloat, horizontalOffset: CGFloat)
 }
 
 public struct CalendarConfiguration {
 
     var displayStyle: DisplayStyle
     var dateTextStyle: DateCellStyle
+    var dateCircleSizeOffset: CGFloat?
     
     public static func FullScreenConfiguration() -> CalendarConfiguration {
         return CalendarConfiguration(displayStyle: .FullScreen, dateTextStyle: .TopCenter(verticalOffset: 17))
     }
     
     public static func InputViewConfiguration() -> CalendarConfiguration {
-        return CalendarConfiguration(displayStyle: .InputView, dateTextStyle: .CenterCenter)
+        return CalendarConfiguration(displayStyle: .InputView, dateTextStyle: .CenterCenter, dateCircleSizeOffset: 8)
     }
     
     /**
      Initializer to setup the configuration.
     */
-    public init(displayStyle: DisplayStyle, dateTextStyle: DateCellStyle) {
+    public init(displayStyle: DisplayStyle, dateTextStyle: DateCellStyle, dateCircleSizeOffset: CGFloat? = nil) {
         self.displayStyle = displayStyle
         self.dateTextStyle = dateTextStyle
+        self.dateCircleSizeOffset = dateCircleSizeOffset
     }
     
 }
