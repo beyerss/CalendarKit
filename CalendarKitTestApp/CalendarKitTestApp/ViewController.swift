@@ -48,7 +48,8 @@ class ViewController: UIViewController {
             calendar.removeFromParentViewController()
             embeddedCalendar = nil
         } else {
-            let config = CalendarConfiguration(displayStyle: .Custom, dateTextStyle: .TopLeft(verticalOffset: 6, horizontalOffset: 8), dateCircleSizeOffset: -7, monthHeaderFont: UIFont(name: "AmericanTypewriter-Bold", size: 30)!, dayHeaderFont: UIFont(name: "AmericanTypewriter", size: 13)!, dateLabelFont: UIFont(name: "AmericanTypewriter-Bold", size: 10)!, headerBackgroundColor: UIColor.purpleColor(), dateHighlightColor: UIColor.purpleColor())
+            let weekdayHeaderColor = UIColor(red: 157/255, green: 56/255, blue: 155/255, alpha: 1.0)
+            let config = CalendarConfiguration(displayStyle: .Custom, dateTextStyle: .TopLeft(verticalOffset: 6, horizontalOffset: 8), dateCircleSizeOffset: -7, monthHeaderFont: UIFont(name: "AmericanTypewriter-Bold", size: 30)!, dayHeaderFont: UIFont(name: "AmericanTypewriter", size: 13)!, dateLabelFont: UIFont(name: "AmericanTypewriter-Bold", size: 10)!, headerBackgroundColor: UIColor.purpleColor(), weekdayHeaderBackgroundColor: weekdayHeaderColor, dateHighlightColor: UIColor.purpleColor())
             embeddedCalendar = Calendar(configuration: config)
             
             guard let calendar = embeddedCalendar else { return }

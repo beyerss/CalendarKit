@@ -255,6 +255,7 @@ extension CalendarMonth: UICollectionViewDataSource {
             if let calendar = containingCalendar {
                 // style the cell based on the configuration settings
                 weekdayHeader.dayNameLabel.font = calendar.configuration.dayHeaderFont
+                weekdayHeader.contentView.backgroundColor = calendar.configuration.weekdayHeaderBackgroundColor
             }
         }
         
