@@ -20,6 +20,7 @@ class BasicDateCollectionViewCell: UICollectionViewCell {
     // We need to store the text placement because it is needed everytime drawRect is called
     private var textPlacement: DateCellStyle = .TopCenter(verticalOffset: 17)
     private var circleSizeOffset: CGFloat?
+    var circleColor: UIColor?
     
     /**
      Updates the dateLabel text so indicate when the cell was selected
@@ -192,10 +193,18 @@ class BasicDateCollectionViewCell: UICollectionViewCell {
         
         // Draw the circle if needed
         if (dateIsSelected) {
-            CalendarDesignKit.drawSelectedBackground(frame: backgroundRect)
+            if let circleColor = circleColor {
+                CalendarDesignKit.drawCircleFilledBackground(frame: backgroundRect, dateCircleColor: circleColor)
+            } else {
+                CalendarDesignKit.drawCircleFilledBackground(frame: backgroundRect)
+            }
         } else {
             if (dateIsToday) {
-                CalendarDesignKit.drawTodayBackground(frame: backgroundRect)
+                if let circleColor = circleColor {
+                    CalendarDesignKit.drawCircleBackground(frame: backgroundRect, dateCircleColor: circleColor)
+                } else {
+                    CalendarDesignKit.drawCircleBackground(frame: backgroundRect)
+                }
             }
         }
     }

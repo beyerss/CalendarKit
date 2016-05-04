@@ -52,25 +52,29 @@ public struct CalendarConfiguration {
     var monthHeaderFont: UIFont
     var dayHeaderFont: UIFont
     var dateLabelFont: UIFont
+    var headerBackgroundColor: UIColor
+    var dateHighlightColor: UIColor
     
     public static func FullScreenConfiguration() -> CalendarConfiguration {
-        return CalendarConfiguration(displayStyle: .FullScreen, dateTextStyle: .TopCenter(verticalOffset: 17), monthHeaderFont: UIFont.preferredMonthHeaderFont(), dayHeaderFont: UIFont.preferredWeekdayHeaderFont(), dateLabelFont: UIFont.preferredDateFont())
+        return CalendarConfiguration(displayStyle: .FullScreen, dateTextStyle: .TopCenter(verticalOffset: 17), monthHeaderFont: UIFont.preferredMonthHeaderFont(), dayHeaderFont: UIFont.preferredWeekdayHeaderFont(), dateLabelFont: UIFont.preferredDateFont(), headerBackgroundColor: CalendarDesignKit.calendarDateColor, dateHighlightColor: CalendarDesignKit.calendarDateColor)
     }
     
     public static func InputViewConfiguration() -> CalendarConfiguration {
-        return CalendarConfiguration(displayStyle: .InputView, dateTextStyle: .CenterCenter, dateCircleSizeOffset: 8, monthHeaderFont: UIFont.preferredInputViewMonthHeaderFont(), dayHeaderFont: UIFont.preferredInputViewWeekdayHeaderFont(), dateLabelFont: UIFont.preferredInputViewDateFont())
+        return CalendarConfiguration(displayStyle: .InputView, dateTextStyle: .CenterCenter, dateCircleSizeOffset: 8, monthHeaderFont: UIFont.preferredInputViewMonthHeaderFont(), dayHeaderFont: UIFont.preferredInputViewWeekdayHeaderFont(), dateLabelFont: UIFont.preferredInputViewDateFont(), headerBackgroundColor: CalendarDesignKit.calendarDateColor, dateHighlightColor: CalendarDesignKit.calendarDateColor)
     }
     
     /**
      Initializer to setup the configuration.
     */
-    public init(displayStyle: DisplayStyle, dateTextStyle: DateCellStyle, dateCircleSizeOffset: CGFloat? = nil, monthHeaderFont: UIFont, dayHeaderFont: UIFont, dateLabelFont: UIFont) {
+    public init(displayStyle: DisplayStyle, dateTextStyle: DateCellStyle, dateCircleSizeOffset: CGFloat? = nil, monthHeaderFont: UIFont, dayHeaderFont: UIFont, dateLabelFont: UIFont, headerBackgroundColor: UIColor, dateHighlightColor: UIColor) {
         self.displayStyle = displayStyle
         self.dateTextStyle = dateTextStyle
         self.dateCircleSizeOffset = dateCircleSizeOffset
         self.monthHeaderFont = monthHeaderFont
         self.dayHeaderFont = dayHeaderFont
         self.dateLabelFont = dateLabelFont
+        self.headerBackgroundColor = headerBackgroundColor
+        self.dateHighlightColor = dateHighlightColor
     }
     
 }

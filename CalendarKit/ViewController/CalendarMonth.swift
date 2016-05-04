@@ -206,11 +206,11 @@ extension CalendarMonth: UICollectionViewDataSource {
         let monthHeader = collectionView.dequeueReusableCellWithReuseIdentifier(kMonthHeaderIdentifier, forIndexPath: indexPath)
         
         if let monthHeader = monthHeader as? MonthHeaderCollectionViewCell {
-            monthHeader.backgroundColor = CalendarDesignKit.calendarDateColor
             monthHeader.monthName.text = monthToDisplay.monthName()
             
             if let calendar = containingCalendar {
                 monthHeader.monthName.font = calendar.configuration.monthHeaderFont
+                monthHeader.backgroundColor = calendar.configuration.headerBackgroundColor
             }
         }
         
@@ -305,6 +305,8 @@ extension CalendarMonth: UICollectionViewDataSource {
             displayStyle = calendar.configuration.displayStyle
             circleSizeOffset = calendar.configuration.dateCircleSizeOffset
             font = calendar.configuration.dateLabelFont
+            
+            dateCell.circleColor = calendar.configuration.dateHighlightColor
         } else {
             displayStyle = .FullScreen
             cellStyle = .TopCenter(verticalOffset: 17)
