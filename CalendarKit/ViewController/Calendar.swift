@@ -22,7 +22,13 @@ public class Calendar: UIViewController {
     // The delegate to notify of events
     public var delegate: CalendarDelegate?
     // The configuration for the calendar
-    var configuration = CalendarConfiguration.FullScreenConfiguration()
+    var configuration = CalendarConfiguration.FullScreenConfiguration() {
+        didSet {
+            if let myView = view {
+                myView.backgroundColor = configuration.calendarBackgroundColor
+            }
+        }
+    }
     
     public init(configuration: CalendarConfiguration? = nil) {
         super.init(nibName: "Calendar", bundle: NSBundle(identifier: "com.beyersapps.CalendarKit"))
@@ -41,7 +47,7 @@ public class Calendar: UIViewController {
         super.viewDidLoad()
         
         // set the background color
-        view.backgroundColor = CalendarDesignKit.calendarBackgroundColor
+        view.backgroundColor = configuration.calendarBackgroundColor
         
         // register cell
         let bundle = NSBundle(identifier: "com.beyersapps.CalendarKit")
@@ -175,6 +181,7 @@ extension Calendar: UICollectionViewDataSource {
             // let the monthCell know that I own it
             month.containingCalendar = self
             month.monthToDisplay = monthsShowing[indexPath.section]
+            month.backgroundColor = configuration.calendarBackgroundColor
         }
      
         return cell

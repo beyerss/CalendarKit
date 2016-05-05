@@ -18,6 +18,7 @@ class ViewController: UIViewController {
     }()
     
     var embeddedCalendar: Calendar?
+    var border: UIView?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -47,9 +48,26 @@ class ViewController: UIViewController {
             calendar.view.removeFromSuperview()
             calendar.removeFromParentViewController()
             embeddedCalendar = nil
+            
+            if let border = border {
+                border.removeFromSuperview()
+                self.border = nil
+            }
         } else {
+            
+            // Create a view that will be used as a border around the calendar
+            border = UIView()
+            if let border = border {
+                border.backgroundColor = UIColor.lightGrayColor()
+                border.translatesAutoresizingMaskIntoConstraints = false
+                self.view.addSubview(border)
+                
+                self.view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("|-(23)-[border]-(23)-|", options: NSLayoutFormatOptions.AlignAllLeft, metrics: nil, views: ["border": border]))
+                self.view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[border(304)]-(23)-|", options: .AlignAllBottom, metrics: nil, views: ["border": border]))
+            }
+            
             let weekdayHeaderColor = UIColor(red: 157/255, green: 56/255, blue: 155/255, alpha: 1.0)
-            let config = CalendarConfiguration(displayStyle: .Custom, dateTextStyle: .TopLeft(verticalOffset: 6, horizontalOffset: 8), dateCircleSizeOffset: -7, monthHeaderFont: UIFont(name: "AmericanTypewriter-Bold", size: 30)!, dayHeaderFont: UIFont(name: "AmericanTypewriter", size: 13)!, dateLabelFont: UIFont(name: "AmericanTypewriter-Bold", size: 10)!, headerBackgroundColor: UIColor.purpleColor(), weekdayHeaderBackgroundColor: weekdayHeaderColor, dateHighlightColor: UIColor.purpleColor(), dateBackgroundColor: UIColor.whiteColor(), dateDisabledBackgroundColor: UIColor.darkGrayColor())
+            let config = CalendarConfiguration(displayStyle: .Custom, dateTextStyle: .TopLeft(verticalOffset: 6, horizontalOffset: 8), dateCircleSizeOffset: -7, monthHeaderFont: UIFont(name: "AmericanTypewriter-Bold", size: 30)!, dayHeaderFont: UIFont(name: "AmericanTypewriter", size: 13)!, dateLabelFont: UIFont(name: "AmericanTypewriter-Bold", size: 10)!, headerBackgroundColor: UIColor.purpleColor(), weekdayHeaderBackgroundColor: weekdayHeaderColor, dateHighlightColor: UIColor.purpleColor(), dateBackgroundColor: UIColor.whiteColor(), dateDisabledBackgroundColor: UIColor.darkGrayColor(), calendarBackgroundColor: UIColor.lightGrayColor())
             embeddedCalendar = Calendar(configuration: config)
             
             guard let calendar = embeddedCalendar else { return }

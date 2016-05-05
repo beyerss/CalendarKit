@@ -35,11 +35,14 @@ class CalendarMonth: UICollectionViewCell {
     /// The calendar that is displaying this month - This must be set in order for CalendarKit to work properly
     var containingCalendar: Calendar?
     
+    override var backgroundColor: UIColor? {
+        didSet {
+            monthCollectionView?.backgroundColor = backgroundColor
+        }
+    }
+    
     override func awakeFromNib() {
         super.awakeFromNib()
-        
-        // set the background color
-        monthCollectionView.backgroundColor = CalendarDesignKit.calendarBackgroundColor
         
         // register all cells that are needed
         let bundle = NSBundle(identifier: "com.beyersapps.CalendarKit")
@@ -184,7 +187,7 @@ extension CalendarMonth: UICollectionViewDataSource {
             } else {
                 // get the spacer cell
                 let cell = collectionView.dequeueReusableCellWithReuseIdentifier(kSpacerIdentifier, forIndexPath: indexPath)
-                cell.backgroundColor = CalendarDesignKit.calendarBackgroundColor
+                cell.backgroundColor = self.backgroundColor
                 return cell
             }
         case 1:
