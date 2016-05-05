@@ -45,6 +45,8 @@ public class Calendar: UIViewController {
     
     override public func viewDidLoad() {
         super.viewDidLoad()
+        // set the month format
+        currentMonth.useMonthFormat(configuration.monthFormat)
         
         // set the background color
         view.backgroundColor = configuration.calendarBackgroundColor

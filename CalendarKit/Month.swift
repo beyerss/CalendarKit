@@ -54,7 +54,13 @@ internal class Month: NSObject {
         
         return false
     }
-   
+    
+    /**
+     Sets the format used when getting the month name.
+    */
+    func useMonthFormat(format: String) {
+        monthFormatter.formatter.dateFormat = format
+    }
 }
 
 /**
