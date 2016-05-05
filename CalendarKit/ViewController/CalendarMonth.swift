@@ -289,7 +289,7 @@ extension CalendarMonth: UICollectionViewDataSource {
     private func setupStyle(dateCell dateCell: BasicDateCollectionViewCell, indexPath: NSIndexPath) {
         // Get the date for today
         let date = monthToDisplay.getDateForCell(indexPath: indexPath)
-        let outsideOfMonth = monthToDisplay.isDateInMonth(date)
+        let outsideOfMonth = monthToDisplay.isDateOutOfMonth(date)
         
         // Figure out the current day of the month
         let day = NSCalendar.currentCalendar().components(.Day, fromDate: date).day
@@ -334,6 +334,13 @@ extension CalendarMonth: UICollectionViewDelegate {
         collectionView.deselectItemAtIndexPath(indexPath, animated: false)
         
         if (indexPath.section == 2) {
+            // determine if the date is in the current month
+            let date = monthToDisplay.getDateForCell(indexPath: indexPath)
+            if (monthToDisplay.isDateOutOfMonth(date)) {
+                // The date is outside of the current month so we will not select it
+                return
+            }
+            
             // Get the cell style and display style from configuration settings
             var configuration = containingCalendar?.configuration
             let cellStyle: DateCellStyle

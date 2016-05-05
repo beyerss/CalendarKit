@@ -159,7 +159,7 @@ extension Month {
         }
     }
     
-    func isDateInMonth(testDate: NSDate) -> Bool {
+    func isDateOutOfMonth(testDate: NSDate) -> Bool {
         let calendar = NSCalendar.currentCalendar()
         let components = calendar.components([.Month], fromDate: testDate)
         let currentComponents = calendar.components([.Month], fromDate: date)

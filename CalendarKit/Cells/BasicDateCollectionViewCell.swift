@@ -27,10 +27,12 @@ class BasicDateCollectionViewCell: UICollectionViewCell {
     */
     override var highlighted: Bool {
         didSet {
-            if (highlighted) {
-                dateLabel.alpha = 0.3
-            } else {
-                dateLabel.alpha = 1.0
+            if (!dateIsOutsideOfMonth) {
+                if (highlighted) {
+                    dateLabel.alpha = 0.3
+                } else {
+                    dateLabel.alpha = 1.0
+                }
             }
         }
     }
