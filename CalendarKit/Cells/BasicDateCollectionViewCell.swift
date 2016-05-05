@@ -22,6 +22,12 @@ class BasicDateCollectionViewCell: UICollectionViewCell {
     private var circleSizeOffset: CGFloat?
     var circleColor: UIColor?
     
+    // Text colors
+    var highlightedTextColor = UIColor.blackColor().colorWithAlphaComponent(0.3)
+    var selectedTextColor = UIColor.whiteColor()
+    var disabledTextColor = UIColor.whiteColor().colorWithAlphaComponent(0.6)
+    var enabledTextColor = UIColor.blackColor()
+    
     /**
      Updates the dateLabel text so indicate when the cell was selected
     */
@@ -29,9 +35,9 @@ class BasicDateCollectionViewCell: UICollectionViewCell {
         didSet {
             if (!dateIsOutsideOfMonth) {
                 if (highlighted) {
-                    dateLabel.alpha = 0.3
+                    dateLabel.textColor = highlightedTextColor
                 } else {
-                    dateLabel.alpha = 1.0
+                    dateLabel.textColor = enabledTextColor
                 }
             }
         }
@@ -45,7 +51,7 @@ class BasicDateCollectionViewCell: UICollectionViewCell {
         dateIsWeekend = false
         dateIsSelected = false
         
-        dateLabel.textColor = UIColor.blackColor()
+        dateLabel.textColor = enabledTextColor
     }
     
     override func awakeFromNib() {
@@ -85,8 +91,7 @@ class BasicDateCollectionViewCell: UICollectionViewCell {
             } else {
                 backgroundColor = CalendarDesignKit.calendarDisabledDateColor
             }
-            dateLabel.textColor = UIColor.whiteColor()
-            dateLabel.alpha = 0.6
+            dateLabel.textColor = disabledTextColor
         } else {
             // Style date inside of the current month
             if let calendarConfiguration = calendarConfiguration {
@@ -94,13 +99,12 @@ class BasicDateCollectionViewCell: UICollectionViewCell {
             } else {
                 backgroundColor = CalendarDesignKit.dateBackgroundColor
             }
-            dateLabel.alpha = 1.0
             
             // Set text color based on selection
             if (dateIsSelected) {
-                dateLabel.textColor = UIColor.whiteColor()
+                dateLabel.textColor = selectedTextColor
             } else {
-                dateLabel.textColor = UIColor.blackColor()
+                dateLabel.textColor = enabledTextColor
             }
         }
         

@@ -299,20 +299,24 @@ extension CalendarMonth: UICollectionViewDataSource {
         dateCell.dateLabel.text = "\(day)"
         
         // figure out thecell style and display style from the configuration settings
-        var calendarConfiguration: CalendarConfiguration?
+        var calendarConfiguration = containingCalendar?.configuration
         let cellStyle: DateCellStyle
         let displayStyle: DisplayStyle
         var circleSizeOffset: CGFloat?
         let font: UIFont
         
-        if let calendar = containingCalendar {
-            calendarConfiguration = calendar.configuration
-            cellStyle = calendar.configuration.dateTextStyle
-            displayStyle = calendar.configuration.displayStyle
-            circleSizeOffset = calendar.configuration.dateCircleSizeOffset
-            font = calendar.configuration.dateLabelFont
+        if let configuration = calendarConfiguration {
+            cellStyle = configuration.dateTextStyle
+            displayStyle = configuration.displayStyle
+            circleSizeOffset = configuration.dateCircleSizeOffset
+            font = configuration.dateLabelFont
             
-            dateCell.circleColor = calendar.configuration.dateHighlightColor
+            dateCell.circleColor = configuration.dateHighlightColor
+            // set up font styles
+            dateCell.enabledTextColor = configuration.dateTextEnabledColor
+            dateCell.disabledTextColor = configuration.dateTextDisabledColor
+            dateCell.highlightedTextColor = configuration.dateTextHighlightedColor
+            dateCell.selectedTextColor = configuration.dateTextSelectedColor
         } else {
             displayStyle = .FullScreen
             cellStyle = .TopCenter(verticalOffset: 17)
