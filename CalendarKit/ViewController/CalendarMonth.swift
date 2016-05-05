@@ -212,6 +212,7 @@ extension CalendarMonth: UICollectionViewDataSource {
             monthHeader.monthName.text = monthToDisplay.monthName()
             
             if let calendar = containingCalendar {
+                monthHeader.monthName.textColor = calendar.configuration.monthHeaderTextColor
                 monthHeader.monthName.font = calendar.configuration.monthHeaderFont
                 monthHeader.backgroundColor = calendar.configuration.headerBackgroundColor
             }
@@ -258,6 +259,7 @@ extension CalendarMonth: UICollectionViewDataSource {
             if let calendar = containingCalendar {
                 // style the cell based on the configuration settings
                 weekdayHeader.dayNameLabel.font = calendar.configuration.dayHeaderFont
+                weekdayHeader.dayNameLabel.textColor = calendar.configuration.weekdayHeaderTextColor
                 weekdayHeader.contentView.backgroundColor = calendar.configuration.weekdayHeaderBackgroundColor
             }
         }
