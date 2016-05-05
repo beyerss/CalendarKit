@@ -67,7 +67,7 @@ class BasicDateCollectionViewCell: UICollectionViewCell {
      @param textPlacement Specifies the position of the text in the cell
      @param displayStyle Specifies the style of calendar that is being displayed. This will change the text size and the size of the circle that are being displayed.
     */
-    func style(dateIsToday today: Bool = false, dateIsWeekend weekend: Bool = false, dateIsSelected selected: Bool = false, dateIsOutsideOfMonth outside: Bool = false, textPlacement: DateCellStyle, font: UIFont, circleSizeOffset: CGFloat?) {
+    func style(dateIsToday today: Bool = false, dateIsWeekend weekend: Bool = false, dateIsSelected selected: Bool = false, dateIsOutsideOfMonth outside: Bool = false, textPlacement: DateCellStyle, font: UIFont, circleSizeOffset: CGFloat?, calendarConfiguration: CalendarConfiguration?) {
         // store passed in parameters
         dateIsToday = today
         dateIsWeekend = weekend
@@ -78,12 +78,20 @@ class BasicDateCollectionViewCell: UICollectionViewCell {
         
         if (dateIsOutsideOfMonth) {
             // Style dates outside of the current month
-            backgroundColor = CalendarDesignKit.calendarDisabledDateColor
+            if let calendarConfiguration = calendarConfiguration {
+                backgroundColor = calendarConfiguration.dateDisabledBackgroundColor
+            } else {
+                backgroundColor = CalendarDesignKit.calendarDisabledDateColor
+            }
             dateLabel.textColor = UIColor.whiteColor()
             dateLabel.alpha = 0.6
         } else {
             // Style date inside of the current month
-            backgroundColor = CalendarDesignKit.dateBackgroundColor
+            if let calendarConfiguration = calendarConfiguration {
+                backgroundColor = calendarConfiguration.dateBackgroundColor
+            } else {
+                backgroundColor = CalendarDesignKit.dateBackgroundColor
+            }
             dateLabel.alpha = 1.0
             
             // Set text color based on selection
