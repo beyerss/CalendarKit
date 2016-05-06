@@ -9,13 +9,6 @@
 import UIKit
 
 class CalendarMonth: UICollectionViewCell {
-    // static heights for full view
-    private let kMonthHeaderHeight = CGFloat(50.0)
-    private let kWeekdayHeaderHeight = CGFloat(30.0)
-    // static heights for input view
-    private let kMonthHeaderHeightAsInput = CGFloat(25.0)
-    private let kWeekdayHeaderHeightAsInput = CGFloat(15.0)
-    
     // static cell identifiers
     private let kBasicCellIdentifier = "BasicDateCell"
     private let kMonthHeaderIdentifier = "MonthHeaderCell"
@@ -51,50 +44,6 @@ class CalendarMonth: UICollectionViewCell {
         monthCollectionView.registerNib(UINib(nibName: "WeekdayHeaderCollectionViewCell", bundle: bundle), forCellWithReuseIdentifier: kWeekdayHeaderIdentifier)
         monthCollectionView.registerNib(UINib(nibName: "SpacerCollectionViewCell", bundle: bundle), forCellWithReuseIdentifier: kSpacerIdentifier)
     }
-    
-    /**
-     Gets the height for the month header.
-     
-     @return CGFloat
-    */
-    private func monthHeaderHeight() -> CGFloat {
-        if let config = containingCalendar?.configuration {
-            // If a configuration exists, we should base the height off of the style in the configuration
-            switch config.displayStyle {
-            case .FullScreen:
-                return kMonthHeaderHeight
-            case .Custom:
-                return kMonthHeaderHeight
-            case .InputView:
-                return kMonthHeaderHeightAsInput
-            }
-        } else {
-            // use a default height in case the configuration doesn't exist for some reason
-            return kMonthHeaderHeight
-        }
-    }
-    
-    /**
-     Gets the height of the weekday header.
-     
-     @return The height for the weekday header.
-    */
-    private func weekdayHeaderHeight() -> CGFloat {
-        if let config = containingCalendar?.configuration {
-            // If a configuration exists we should base the height off of the style in the configuration
-            switch config.displayStyle {
-            case .FullScreen:
-                return kWeekdayHeaderHeight
-            case .Custom:
-                return kWeekdayHeaderHeight
-            case .InputView:
-                return kWeekdayHeaderHeightAsInput
-            }
-        } else {
-            // Use a default height in case the configuration doesn't exist
-            return kWeekdayHeaderHeight
-        }
-    }
 
 }
 
@@ -102,11 +51,19 @@ extension CalendarMonth: UICollectionViewDelegateFlowLayout {
     
     func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
         
+        var monthHeight: CGFloat = 50
+        var weekHeight: CGFloat = 30
+        
+        if let config = containingCalendar?.configuration {
+            monthHeight = config.monthHeaderHeight
+            weekHeight = config.weekdayHeaderHeight
+        }
+        
         switch (indexPath.section) {
         case 0:
             // The first item is the month header
             if (indexPath.item == 0) {
-                return CGSizeMake(collectionView.frame.width, monthHeaderHeight())
+                return CGSizeMake(collectionView.frame.width, monthHeight)
             } else {
                 // The second item is a divider that can be 1px tall
                 return CGSizeMake(collectionView.frame.width, 1)
@@ -114,14 +71,14 @@ extension CalendarMonth: UICollectionViewDelegateFlowLayout {
         case 1:
             // The second section is the weekday header so calculate the height and width
             let width = (monthCollectionView.frame.size.width-12) / 7
-            let size = CGSizeMake(width, weekdayHeaderHeight())
+            let size = CGSizeMake(width, weekHeight)
             return size
         default:
             // The third section is the actual calendar - figure out the size for each cell
             let rowsNeeded = monthToDisplay.weeksInMonth()
             let dividerHeight = CGFloat((rowsNeeded - 1) * 2)
             let width = (monthCollectionView.frame.size.width-12) / 7
-            let size = CGSizeMake(width, (monthCollectionView.frame.size.height - dividerHeight - monthHeaderHeight() - weekdayHeaderHeight()) / CGFloat(rowsNeeded))
+            let size = CGSizeMake(width, (monthCollectionView.frame.size.height - dividerHeight - monthHeight - weekHeight) / CGFloat(rowsNeeded))
             return size
         }
     }
