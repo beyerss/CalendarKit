@@ -22,13 +22,19 @@ public class Calendar: UIViewController {
     // The delegate to notify of events
     public var delegate: CalendarDelegate?
     // The configuration for the calendar
-    var configuration = CalendarConfiguration.FullScreenConfiguration() {
+    private(set) public var configuration = CalendarConfiguration.FullScreenConfiguration() {
         didSet {
             if let myView = view {
                 myView.backgroundColor = configuration.calendarBackgroundColor
             }
+            if let collection = calendarCollectionView {
+                collection.backgroundColor = configuration.calendarBackgroundColor
+            }
         }
     }
+    
+    /// The constraint that limits the height of the calendar. This is used when a dynamic calendar height is desired.
+    public var calendarHeightConstraint: NSLayoutConstraint?
     
     public init(configuration: CalendarConfiguration? = nil) {
         super.init(nibName: "Calendar", bundle: NSBundle(identifier: "com.beyersapps.CalendarKit"))
@@ -50,6 +56,7 @@ public class Calendar: UIViewController {
         
         // set the background color
         view.backgroundColor = configuration.calendarBackgroundColor
+        calendarCollectionView.backgroundColor = configuration.calendarBackgroundColor
         
         // register cell
         let bundle = NSBundle(identifier: "com.beyersapps.CalendarKit")
@@ -57,10 +64,16 @@ public class Calendar: UIViewController {
         
         // Set up data to start at the date 2 months ago
         rebuildMonths(currentMonthOnly: true)
+        
+        // tell the delegate what month I'm on
+        delegate?.calendar?(self, didScrollToDate: currentMonth.date, withNumberOfWeeks: currentMonth.weeksInMonth())
     }
     
     override public func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
+        
+        // fix the calendar height
+        updateCalendarHeight()
         
         // reload the data whenever the view appears
         self.calendarCollectionView.reloadData()
@@ -75,6 +88,37 @@ public class Calendar: UIViewController {
         // reload data and make sure we are at the center month so that we can scroll both ways
         calendarCollectionView.reloadData()
         calendarCollectionView.scrollToItemAtIndexPath(NSIndexPath(forItem: 0, inSection: 2), atScrollPosition: .Left, animated: false)
+    }
+
+    /**
+     Updates the height of the calendar if the height is supposed to be dynamic
+    */
+    private func updateCalendarHeight() {
+        if (configuration.dynamicHeight) {
+            let weeks = CGFloat(currentMonth.weeksInMonth())
+            let totalCellHeight = weeks * configuration.heightForDynamicHeightRows
+            let totalSpacerheight = (weeks - 1) * configuration.spaceBetweenDates
+            let monthHeaderHeight = configuration.monthHeaderHeight
+            let weekdayHeaderHeight = configuration.weekdayHeaderHeight
+            let padding: CGFloat = 1
+            
+            var desiredHeight = totalCellHeight + totalSpacerheight + monthHeaderHeight + weekdayHeaderHeight + padding
+            
+            if let constraint = calendarHeightConstraint where constraint.constant != desiredHeight {
+                if (constraint.constant > desiredHeight) {
+                    calendarCollectionView.collectionViewLayout.invalidateLayout()
+                }
+                
+                constraint.constant = desiredHeight
+                UIView.animateWithDuration(0.5, animations: {[weak self]() in
+                    // call layout if needed on superview so it animates and related constraints
+                    self?.view.superview?.layoutIfNeeded()
+                    // animate calendar constraints
+                    self?.view.layoutIfNeeded()
+                    }, completion: { [weak self](finished) in
+                })
+            }
+        }
     }
     
     /**
@@ -133,6 +177,9 @@ public class Calendar: UIViewController {
                 currentMonth = monthsShowing[4]
             }
             
+            // fix the calendar height
+            updateCalendarHeight()
+            
             // notify the delegate that we changed months
             delegate?.calendar?(self, didScrollToDate: currentMonth.date, withNumberOfWeeks: currentMonth.weeksInMonth())
 
@@ -151,8 +198,6 @@ public class Calendar: UIViewController {
     }
     
     public func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
-        
-        // This should fill the entire frame of the collection view
         return calendarCollectionView.frame.size
     }
     

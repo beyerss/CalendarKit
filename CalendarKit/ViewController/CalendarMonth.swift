@@ -34,6 +34,16 @@ class CalendarMonth: UICollectionViewCell {
         }
     }
     
+    var cellSpacing: CGFloat {
+        get {
+            if let config = containingCalendar?.configuration {
+                return config.spaceBetweenDates
+            }
+            // Put 2 px between each cell
+            return 2.0
+        }
+    }
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         
@@ -53,10 +63,15 @@ extension CalendarMonth: UICollectionViewDelegateFlowLayout {
         
         var monthHeight: CGFloat = 50
         var weekHeight: CGFloat = 30
+        var rowHeight: CGFloat?
         
         if let config = containingCalendar?.configuration {
             monthHeight = config.monthHeaderHeight
             weekHeight = config.weekdayHeaderHeight
+            
+            if (config.dynamicHeight) {
+                rowHeight = config.heightForDynamicHeightRows
+            }
         }
         
         switch (indexPath.section) {
@@ -70,15 +85,20 @@ extension CalendarMonth: UICollectionViewDelegateFlowLayout {
             }
         case 1:
             // The second section is the weekday header so calculate the height and width
-            let width = (monthCollectionView.frame.size.width-12) / 7
+            let width = (monthCollectionView.frame.size.width-(6 * cellSpacing)) / 7
             let size = CGSizeMake(width, weekHeight)
             return size
         default:
             // The third section is the actual calendar - figure out the size for each cell
             let rowsNeeded = monthToDisplay.weeksInMonth()
-            let dividerHeight = CGFloat((rowsNeeded - 1) * 2)
-            let width = (monthCollectionView.frame.size.width-12) / 7
-            let size = CGSizeMake(width, (monthCollectionView.frame.size.height - dividerHeight - monthHeight - weekHeight) / CGFloat(rowsNeeded))
+            let dividerHeight = CGFloat((rowsNeeded - 1)) * cellSpacing
+            let width = (monthCollectionView.frame.size.width-(6 * cellSpacing)) / 7
+            let size: CGSize
+            if let rowHeight = rowHeight {
+                size = CGSizeMake(width, rowHeight)
+            } else {
+                size = CGSizeMake(width, (monthCollectionView.frame.size.height - dividerHeight - monthHeight - weekHeight) / CGFloat(rowsNeeded))
+            }
             return size
         }
     }
@@ -89,8 +109,7 @@ extension CalendarMonth: UICollectionViewDelegateFlowLayout {
         case 0:
             return 0
         default:
-            // Put 2 px between each cell
-            return 2.0
+            return cellSpacing
         }
     }
     
@@ -100,8 +119,7 @@ extension CalendarMonth: UICollectionViewDelegateFlowLayout {
         case 0:
             return 0
         default:
-            // Put 2 px between each cell
-            return 2.0
+            return cellSpacing
         }
     }
     

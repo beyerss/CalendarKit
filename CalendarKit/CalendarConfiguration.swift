@@ -46,40 +46,43 @@ public enum DateCellStyle {
 
 public struct CalendarConfiguration {
 
-    var displayStyle: DisplayStyle
-    var dateTextStyle: DateCellStyle
-    var dateCircleSizeOffset: CGFloat?
-    var monthHeaderFont: UIFont
-    var dayHeaderFont: UIFont
-    var dateLabelFont: UIFont
-    var headerBackgroundColor: UIColor
-    var weekdayHeaderBackgroundColor: UIColor
-    var dateHighlightColor: UIColor
-    var dateBackgroundColor: UIColor
-    var dateDisabledBackgroundColor: UIColor
-    var calendarBackgroundColor: UIColor
-    var dateTextEnabledColor: UIColor
-    var dateTextDisabledColor: UIColor
-    var dateTextSelectedColor: UIColor
-    var dateTextHighlightedColor: UIColor
-    var monthHeaderTextColor: UIColor
-    var weekdayHeaderTextColor: UIColor
-    var monthFormat: String
-    var monthHeaderHeight: CGFloat
-    var weekdayHeaderHeight: CGFloat
+    private(set) public var displayStyle: DisplayStyle
+    private(set) public var dateTextStyle: DateCellStyle
+    private(set) public var dateCircleSizeOffset: CGFloat?
+    private(set) public var monthHeaderFont: UIFont
+    private(set) public var dayHeaderFont: UIFont
+    private(set) public var dateLabelFont: UIFont
+    private(set) public var headerBackgroundColor: UIColor
+    private(set) public var weekdayHeaderBackgroundColor: UIColor
+    private(set) public var dateHighlightColor: UIColor
+    private(set) public var dateBackgroundColor: UIColor
+    private(set) public var dateDisabledBackgroundColor: UIColor
+    private(set) public var calendarBackgroundColor: UIColor
+    private(set) public var dateTextEnabledColor: UIColor
+    private(set) public var dateTextDisabledColor: UIColor
+    private(set) public var dateTextSelectedColor: UIColor
+    private(set) public var dateTextHighlightedColor: UIColor
+    private(set) public var monthHeaderTextColor: UIColor
+    private(set) public var weekdayHeaderTextColor: UIColor
+    private(set) public var monthFormat: String
+    private(set) public var monthHeaderHeight: CGFloat
+    private(set) public var weekdayHeaderHeight: CGFloat
+    private(set) public var dynamicHeight: Bool
+    private(set) public var heightForDynamicHeightRows: CGFloat
+    private(set) public var spaceBetweenDates: CGFloat
     
     public static func FullScreenConfiguration() -> CalendarConfiguration {
-        return CalendarConfiguration(displayStyle: .FullScreen, dateTextStyle: .TopCenter(verticalOffset: 17), monthHeaderFont: UIFont.preferredMonthHeaderFont(), dayHeaderFont: UIFont.preferredWeekdayHeaderFont(), dateLabelFont: UIFont.preferredDateFont(), headerBackgroundColor: CalendarDesignKit.calendarDateColor, weekdayHeaderBackgroundColor: UIColor.lightGrayColor(), dateHighlightColor: CalendarDesignKit.calendarDateColor, dateBackgroundColor: CalendarDesignKit.dateBackgroundColor, dateDisabledBackgroundColor: CalendarDesignKit.calendarDisabledDateColor, calendarBackgroundColor: CalendarDesignKit.calendarBackgroundColor, dateTextEnabledColor: UIColor.blackColor(), dateTextDisabledColor: UIColor.whiteColor().colorWithAlphaComponent(0.6), dateTextSelectedColor: UIColor.whiteColor(), dateTextHighlightedColor: UIColor.blackColor().colorWithAlphaComponent(0.3), monthHeaderTextColor: UIColor.whiteColor(), weekdayHeaderTextColor: UIColor.whiteColor(), monthFormat: "MMMM", monthHeaderHeight: 50.0, weekdayHeaderHeight: 30.0)
+        return CalendarConfiguration(displayStyle: .FullScreen, dateTextStyle: .TopCenter(verticalOffset: 17), monthHeaderFont: UIFont.preferredMonthHeaderFont(), dayHeaderFont: UIFont.preferredWeekdayHeaderFont(), dateLabelFont: UIFont.preferredDateFont(), headerBackgroundColor: CalendarDesignKit.calendarDateColor, weekdayHeaderBackgroundColor: UIColor.lightGrayColor(), dateHighlightColor: CalendarDesignKit.calendarDateColor, dateBackgroundColor: CalendarDesignKit.dateBackgroundColor, dateDisabledBackgroundColor: CalendarDesignKit.calendarDisabledDateColor, calendarBackgroundColor: CalendarDesignKit.calendarBackgroundColor, dateTextEnabledColor: UIColor.blackColor(), dateTextDisabledColor: UIColor.whiteColor().colorWithAlphaComponent(0.6), dateTextSelectedColor: UIColor.whiteColor(), dateTextHighlightedColor: UIColor.blackColor().colorWithAlphaComponent(0.3), monthHeaderTextColor: UIColor.whiteColor(), weekdayHeaderTextColor: UIColor.whiteColor(), monthFormat: "MMMM", monthHeaderHeight: 50.0, weekdayHeaderHeight: 30.0, hasDynamicHeight: false, spaceBetweenDates: 2.0)
     }
     
     public static func InputViewConfiguration() -> CalendarConfiguration {
-        return CalendarConfiguration(displayStyle: .InputView, dateTextStyle: .CenterCenter, dateCircleSizeOffset: 8, monthHeaderFont: UIFont.preferredInputViewMonthHeaderFont(), dayHeaderFont: UIFont.preferredInputViewWeekdayHeaderFont(), dateLabelFont: UIFont.preferredInputViewDateFont(), headerBackgroundColor: CalendarDesignKit.calendarDateColor, weekdayHeaderBackgroundColor: UIColor.lightGrayColor(), dateHighlightColor: CalendarDesignKit.calendarDateColor, dateBackgroundColor: CalendarDesignKit.dateBackgroundColor, dateDisabledBackgroundColor: CalendarDesignKit.calendarDisabledDateColor, calendarBackgroundColor: CalendarDesignKit.calendarBackgroundColor, dateTextEnabledColor: UIColor.blackColor(), dateTextDisabledColor: UIColor.whiteColor().colorWithAlphaComponent(0.6), dateTextSelectedColor: UIColor.whiteColor(), dateTextHighlightedColor: UIColor.blackColor().colorWithAlphaComponent(0.3), monthHeaderTextColor: UIColor.whiteColor(), weekdayHeaderTextColor: UIColor.whiteColor(), monthFormat: "MMMM", monthHeaderHeight: 25.0, weekdayHeaderHeight: 15.0)
+        return CalendarConfiguration(displayStyle: .InputView, dateTextStyle: .CenterCenter, dateCircleSizeOffset: 8, monthHeaderFont: UIFont.preferredInputViewMonthHeaderFont(), dayHeaderFont: UIFont.preferredInputViewWeekdayHeaderFont(), dateLabelFont: UIFont.preferredInputViewDateFont(), headerBackgroundColor: CalendarDesignKit.calendarDateColor, weekdayHeaderBackgroundColor: UIColor.lightGrayColor(), dateHighlightColor: CalendarDesignKit.calendarDateColor, dateBackgroundColor: CalendarDesignKit.dateBackgroundColor, dateDisabledBackgroundColor: CalendarDesignKit.calendarDisabledDateColor, calendarBackgroundColor: CalendarDesignKit.calendarBackgroundColor, dateTextEnabledColor: UIColor.blackColor(), dateTextDisabledColor: UIColor.whiteColor().colorWithAlphaComponent(0.6), dateTextSelectedColor: UIColor.whiteColor(), dateTextHighlightedColor: UIColor.blackColor().colorWithAlphaComponent(0.3), monthHeaderTextColor: UIColor.whiteColor(), weekdayHeaderTextColor: UIColor.whiteColor(), monthFormat: "MMMM", monthHeaderHeight: 25.0, weekdayHeaderHeight: 15.0, hasDynamicHeight: false, spaceBetweenDates: 2.0)
     }
     
     /**
      Initializer to setup the configuration.
     */
-    public init(displayStyle: DisplayStyle, dateTextStyle: DateCellStyle, dateCircleSizeOffset: CGFloat? = nil, monthHeaderFont: UIFont, dayHeaderFont: UIFont, dateLabelFont: UIFont, headerBackgroundColor: UIColor, weekdayHeaderBackgroundColor: UIColor, dateHighlightColor: UIColor, dateBackgroundColor: UIColor, dateDisabledBackgroundColor: UIColor, calendarBackgroundColor: UIColor, dateTextEnabledColor: UIColor, dateTextDisabledColor: UIColor, dateTextSelectedColor: UIColor, dateTextHighlightedColor: UIColor, monthHeaderTextColor: UIColor, weekdayHeaderTextColor: UIColor, monthFormat: String, monthHeaderHeight: CGFloat, weekdayHeaderHeight: CGFloat) {
+    public init(displayStyle: DisplayStyle, dateTextStyle: DateCellStyle, dateCircleSizeOffset: CGFloat? = nil, monthHeaderFont: UIFont, dayHeaderFont: UIFont, dateLabelFont: UIFont, headerBackgroundColor: UIColor, weekdayHeaderBackgroundColor: UIColor, dateHighlightColor: UIColor, dateBackgroundColor: UIColor, dateDisabledBackgroundColor: UIColor, calendarBackgroundColor: UIColor, dateTextEnabledColor: UIColor, dateTextDisabledColor: UIColor, dateTextSelectedColor: UIColor, dateTextHighlightedColor: UIColor, monthHeaderTextColor: UIColor, weekdayHeaderTextColor: UIColor, monthFormat: String, monthHeaderHeight: CGFloat, weekdayHeaderHeight: CGFloat, hasDynamicHeight: Bool, heightForDynamicHeightRows: CGFloat = 0, spaceBetweenDates: CGFloat) {
         self.displayStyle = displayStyle
         self.dateTextStyle = dateTextStyle
         self.dateCircleSizeOffset = dateCircleSizeOffset
@@ -101,6 +104,9 @@ public struct CalendarConfiguration {
         self.monthFormat = monthFormat
         self.monthHeaderHeight = monthHeaderHeight
         self.weekdayHeaderHeight = weekdayHeaderHeight
+        self.dynamicHeight = hasDynamicHeight
+        self.heightForDynamicHeightRows = heightForDynamicHeightRows
+        self.spaceBetweenDates = spaceBetweenDates
     }
     
 }
