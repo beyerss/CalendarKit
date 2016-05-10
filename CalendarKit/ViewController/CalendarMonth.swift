@@ -444,7 +444,31 @@ extension CalendarMonth {
             }
         }
         
+        // check to see if weekends should be disabled
+        if let shouldDisableWeekends = containingCalendar?.configuration.logicConfiguration?.shouldDisableWeekends where shouldDisableWeekends == true {
+            // Determine if the date is a weekend
+            if (isWeekend(date: date)) {
+                return false
+            }
+        }
+        
         return true
+    }
+    
+    /**
+     Checks to see if a date is a weekend
+    */
+    private func isWeekend(date date: NSDate) -> Bool {
+        let calendar = NSCalendar.currentCalendar()
+        let weekdayRange = calendar.maximumRangeOfUnit(.Weekday)
+        let components = calendar.components(.Weekday, fromDate: date)
+        let weekdayOfDate = components.weekday
+        
+        if (weekdayOfDate == weekdayRange.location || weekdayOfDate == weekdayRange.length) {
+            return true
+        }
+        
+        return false
     }
     
 }

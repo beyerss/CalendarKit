@@ -121,11 +121,14 @@ public struct CalendarLogicConfiguration {
     private(set) public var maxDate: NSDate?
     /// Specifies any dates within the <code>minDate</code> and <code>maxDate</code> that should also be disabled.
     private(set) public var disabledDates: [NSDate]?
+    /// Specifies if weekends should be disabled. Default is false.
+    private(set) public var shouldDisableWeekends = false
     
-    public init(minDate: NSDate? = nil, maxDate: NSDate? = nil, disabledDates: [NSDate]? = nil) {
+    public init(minDate: NSDate? = nil, maxDate: NSDate? = nil, disabledDates: [NSDate]? = nil, disableWeekends: Bool = false) {
         self.minDate = minDate
         self.maxDate = maxDate
         self.disabledDates = disabledDates
+        self.shouldDisableWeekends = disableWeekends
     }
     
 }
