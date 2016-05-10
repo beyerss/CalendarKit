@@ -452,6 +452,16 @@ extension CalendarMonth {
             }
         }
         
+        // check to see if this date is in the list of disabled dates
+        if let disabledDates = containingCalendar?.configuration.logicConfiguration?.disabledDates {
+            let relevantDisabledDates = disabledDates.filter({ return (NSCalendar.currentCalendar().compareDate($0, toDate: date, toUnitGranularity: .Day) == .OrderedSame) })
+            
+            if let dates = relevantDisabledDates.first {
+                // This date is a weekend
+                return false
+            }
+        }
+        
         return true
     }
     
