@@ -86,16 +86,16 @@ class BasicDateCollectionViewCell: UICollectionViewCell {
         
         if (dateIsOutsideOfMonth) {
             // Style dates outside of the current month
-            if let calendarConfiguration = calendarConfiguration {
-                backgroundColor = calendarConfiguration.dateDisabledBackgroundColor
+            if let config = calendarConfiguration?.dateCellConfiguration {
+                backgroundColor = config.disabledBackgroundColor
             } else {
                 backgroundColor = CalendarDesignKit.calendarDisabledDateColor
             }
             dateLabel.textColor = disabledTextColor
         } else {
             // Style date inside of the current month
-            if let calendarConfiguration = calendarConfiguration {
-                backgroundColor = calendarConfiguration.dateBackgroundColor
+            if let config = calendarConfiguration?.dateCellConfiguration {
+                backgroundColor = config.backgroundColor
             } else {
                 backgroundColor = CalendarDesignKit.dateBackgroundColor
             }

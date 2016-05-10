@@ -66,11 +66,11 @@ extension CalendarMonth: UICollectionViewDelegateFlowLayout {
         var rowHeight: CGFloat?
         
         if let config = containingCalendar?.configuration {
-            monthHeight = config.monthHeaderHeight
-            weekHeight = config.weekdayHeaderHeight
+            monthHeight = config.monthHeaderConfiguration.height
+            weekHeight = config.weekdayHeaderConfiguration.height
             
             if (config.dynamicHeight) {
-                rowHeight = config.heightForDynamicHeightRows
+                rowHeight = config.dateCellConfiguration.heightForDynamicHeightRows
             }
         }
         
@@ -187,9 +187,9 @@ extension CalendarMonth: UICollectionViewDataSource {
             monthHeader.monthName.text = monthToDisplay.monthName()
             
             if let calendar = containingCalendar {
-                monthHeader.monthName.textColor = calendar.configuration.monthHeaderTextColor
-                monthHeader.monthName.font = calendar.configuration.monthHeaderFont
-                monthHeader.backgroundColor = calendar.configuration.headerBackgroundColor
+                monthHeader.monthName.textColor = calendar.configuration.monthHeaderConfiguration.textColor
+                monthHeader.monthName.font = calendar.configuration.monthHeaderConfiguration.font
+                monthHeader.backgroundColor = calendar.configuration.monthHeaderConfiguration.backgroundColor
             }
         }
         
@@ -233,9 +233,9 @@ extension CalendarMonth: UICollectionViewDataSource {
             
             if let calendar = containingCalendar {
                 // style the cell based on the configuration settings
-                weekdayHeader.dayNameLabel.font = calendar.configuration.dayHeaderFont
-                weekdayHeader.dayNameLabel.textColor = calendar.configuration.weekdayHeaderTextColor
-                weekdayHeader.contentView.backgroundColor = calendar.configuration.weekdayHeaderBackgroundColor
+                weekdayHeader.dayNameLabel.font = calendar.configuration.weekdayHeaderConfiguration.font
+                weekdayHeader.dayNameLabel.textColor = calendar.configuration.weekdayHeaderConfiguration.textColor
+                weekdayHeader.contentView.backgroundColor = calendar.configuration.weekdayHeaderConfiguration.backgroundColor
             }
         }
         
@@ -276,26 +276,23 @@ extension CalendarMonth: UICollectionViewDataSource {
         dateCell.dateLabel.text = "\(day)"
         
         // figure out thecell style and display style from the configuration settings
-        var calendarConfiguration = containingCalendar?.configuration
+        let calendarConfiguration = containingCalendar?.configuration
         let cellStyle: DateCellStyle
-        let displayStyle: DisplayStyle
         var circleSizeOffset: CGFloat?
         let font: UIFont
         
         if let configuration = calendarConfiguration {
-            cellStyle = configuration.dateTextStyle
-            displayStyle = configuration.displayStyle
-            circleSizeOffset = configuration.dateCircleSizeOffset
-            font = configuration.dateLabelFont
+            cellStyle = configuration.dateCellConfiguration.textStyle
+            circleSizeOffset = configuration.dateCellConfiguration.circleSizeOffset
+            font = configuration.dateCellConfiguration.font
             
-            dateCell.circleColor = configuration.dateHighlightColor
+            dateCell.circleColor = configuration.dateCellConfiguration.highlightColor
             // set up font styles
-            dateCell.enabledTextColor = configuration.dateTextEnabledColor
-            dateCell.disabledTextColor = configuration.dateTextDisabledColor
-            dateCell.highlightedTextColor = configuration.dateTextHighlightedColor
-            dateCell.selectedTextColor = configuration.dateTextSelectedColor
+            dateCell.enabledTextColor = configuration.dateCellConfiguration.textEnabledColor
+            dateCell.disabledTextColor = configuration.dateCellConfiguration.textDisabledColor
+            dateCell.highlightedTextColor = configuration.dateCellConfiguration.textHighlightedColor
+            dateCell.selectedTextColor = configuration.dateCellConfiguration.textSelectedColor
         } else {
-            displayStyle = .FullScreen
             cellStyle = .TopCenter(verticalOffset: 17)
             font = UIFont.preferredDateFont()
         }
@@ -326,19 +323,16 @@ extension CalendarMonth: UICollectionViewDelegate {
             }
             
             // Get the cell style and display style from configuration settings
-            var configuration = containingCalendar?.configuration
+            let configuration = containingCalendar?.configuration
             let cellStyle: DateCellStyle
-            let displayStyle: DisplayStyle
             var circleOffset: CGFloat?
             let font: UIFont
             
             if let configuration = configuration {
-                cellStyle = configuration.dateTextStyle
-                displayStyle = configuration.displayStyle
-                circleOffset = configuration.dateCircleSizeOffset
-                font = configuration.dateLabelFont
+                cellStyle = configuration.dateCellConfiguration.textStyle
+                circleOffset = configuration.dateCellConfiguration.circleSizeOffset
+                font = configuration.dateCellConfiguration.font
             } else {
-                displayStyle = .FullScreen
                 cellStyle = .TopCenter(verticalOffset: 17)
                 font = UIFont.preferredDateFont()
             }

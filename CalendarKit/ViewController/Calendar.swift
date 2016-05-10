@@ -25,10 +25,10 @@ public class Calendar: UIViewController {
     private(set) public var configuration = CalendarConfiguration.FullScreenConfiguration() {
         didSet {
             if let myView = view {
-                myView.backgroundColor = configuration.calendarBackgroundColor
+                myView.backgroundColor = configuration.backgroundColor
             }
             if let collection = calendarCollectionView {
-                collection.backgroundColor = configuration.calendarBackgroundColor
+                collection.backgroundColor = configuration.backgroundColor
             }
         }
     }
@@ -55,8 +55,8 @@ public class Calendar: UIViewController {
         currentMonth.useMonthFormat(configuration.monthFormat)
         
         // set the background color
-        view.backgroundColor = configuration.calendarBackgroundColor
-        calendarCollectionView.backgroundColor = configuration.calendarBackgroundColor
+        view.backgroundColor = configuration.backgroundColor
+        calendarCollectionView.backgroundColor = configuration.backgroundColor
         
         // register cell
         let bundle = NSBundle(identifier: "com.beyersapps.CalendarKit")
@@ -96,13 +96,13 @@ public class Calendar: UIViewController {
     private func updateCalendarHeight() {
         if (configuration.dynamicHeight) {
             let weeks = CGFloat(currentMonth.weeksInMonth())
-            let totalCellHeight = weeks * configuration.heightForDynamicHeightRows
+            let totalCellHeight = weeks * configuration.dateCellConfiguration.heightForDynamicHeightRows
             let totalSpacerheight = (weeks - 1) * configuration.spaceBetweenDates
-            let monthHeaderHeight = configuration.monthHeaderHeight
-            let weekdayHeaderHeight = configuration.weekdayHeaderHeight
+            let monthHeaderHeight = configuration.monthHeaderConfiguration.height
+            let weekdayHeaderHeight = configuration.weekdayHeaderConfiguration.height
             let padding: CGFloat = 1
             
-            var desiredHeight = totalCellHeight + totalSpacerheight + monthHeaderHeight + weekdayHeaderHeight + padding
+            let desiredHeight = totalCellHeight + totalSpacerheight + monthHeaderHeight + weekdayHeaderHeight + padding
             
             if let constraint = calendarHeightConstraint where constraint.constant != desiredHeight {
                 if (constraint.constant > desiredHeight) {
@@ -115,7 +115,7 @@ public class Calendar: UIViewController {
                     self?.view.superview?.layoutIfNeeded()
                     // animate calendar constraints
                     self?.view.layoutIfNeeded()
-                    }, completion: { [weak self](finished) in
+                    }, completion: { (finished) in
                 })
             }
         }
@@ -228,7 +228,7 @@ extension Calendar: UICollectionViewDataSource {
             // let the monthCell know that I own it
             month.containingCalendar = self
             month.monthToDisplay = monthsShowing[indexPath.section]
-            month.backgroundColor = configuration.calendarBackgroundColor
+            month.backgroundColor = configuration.backgroundColor
         }
      
         return cell

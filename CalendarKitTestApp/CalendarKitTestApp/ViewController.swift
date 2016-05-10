@@ -59,7 +59,7 @@ class ViewController: UIViewController {
             // Create a view that will be used as a border around the calendar
             border = UIView()
             if let border = border {
-                border.backgroundColor = UIColor.redColor()
+                border.backgroundColor = UIColor.lightGrayColor()
                 border.translatesAutoresizingMaskIntoConstraints = false
                 self.view.addSubview(border)
                 
@@ -67,7 +67,12 @@ class ViewController: UIViewController {
             }
             
             let weekdayHeaderColor = UIColor(red: 157/255, green: 56/255, blue: 155/255, alpha: 1.0)
-            let config = CalendarConfiguration(displayStyle: .Custom, dateTextStyle: .TopCenter(verticalOffset: 8), dateCircleSizeOffset: -7, monthHeaderFont: UIFont(name: "AmericanTypewriter-Bold", size: 30)!, dayHeaderFont: UIFont(name: "AmericanTypewriter", size: 13)!, dateLabelFont: UIFont(name: "AmericanTypewriter-Bold", size: 10)!, headerBackgroundColor: UIColor.purpleColor(), weekdayHeaderBackgroundColor: weekdayHeaderColor, dateHighlightColor: weekdayHeaderColor, dateBackgroundColor: UIColor.whiteColor(), dateDisabledBackgroundColor: UIColor.darkGrayColor(), calendarBackgroundColor: UIColor.lightGrayColor(), dateTextEnabledColor: weekdayHeaderColor, dateTextDisabledColor: UIColor.lightGrayColor(), dateTextSelectedColor: UIColor.whiteColor(), dateTextHighlightedColor: weekdayHeaderColor.colorWithAlphaComponent(0.6), monthHeaderTextColor: UIColor.lightGrayColor(), weekdayHeaderTextColor: UIColor.lightGrayColor(), monthFormat: "MMMM yyyy", monthHeaderHeight: 40.0, weekdayHeaderHeight: 20.0, hasDynamicHeight: true, heightForDynamicHeightRows: 40, spaceBetweenDates: 4.0)
+            
+            let dateCellConfiguration = DateCellConfiguration(textStyle: .TopCenter(verticalOffset: 8), circleSizeOffset: -7, font: UIFont(name: "AmericanTypewriter-Bold", size: 10)!, backgroundColor: UIColor.whiteColor(), disabledBackgroundColor: UIColor.darkGrayColor(), highlightColor: weekdayHeaderColor, textEnabledColor: weekdayHeaderColor, textDisabledColor: UIColor.lightGrayColor(), textHighlightedColor: weekdayHeaderColor.colorWithAlphaComponent(0.6), textSelectedColor: UIColor.whiteColor(), heightForDynamicHeightRows: 40.0)
+            let monthHeaderConfig = HeaderConfiguration(font: UIFont(name: "AmericanTypewriter-Bold", size: 30)!, textColor: UIColor.lightGrayColor(), backgroundColor: UIColor.purpleColor(), height: 40.0)
+            let weekdayHeaderConfig = HeaderConfiguration(font: UIFont(name: "AmericanTypewriter", size: 13)!, textColor: UIColor.lightGrayColor(), backgroundColor: weekdayHeaderColor, height: 20.0)
+            
+            let config = CalendarConfiguration(displayStyle: .Custom, monthFormat: "MMMM yyyy", calendarBackgroundColor: UIColor.lightGrayColor(), hasDynamicHeight: true, spaceBetweenDates: 4.0, monthHeaderConfiguration: monthHeaderConfig, weekdayHeaderConfiguration: weekdayHeaderConfig, dateCellConfiguration: dateCellConfiguration)
             embeddedCalendar = Calendar(configuration: config)
             embeddedCalendar?.delegate = self
             
