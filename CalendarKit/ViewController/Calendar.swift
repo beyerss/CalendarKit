@@ -15,6 +15,8 @@ public class Calendar: UIViewController {
     private var monthsShowing = Array<Month>()
     // The month currently showing
     private var currentMonth = Month(monthDate: NSDate())
+    // The position of the current month in the scroll view
+    private var currentMonthPosition: Int = 0
     
     // The date that has been selected
     public var selectedDate: NSDate?
@@ -87,7 +89,7 @@ public class Calendar: UIViewController {
         
         // reload data and make sure we are at the center month so that we can scroll both ways
         calendarCollectionView.reloadData()
-        calendarCollectionView.scrollToItemAtIndexPath(NSIndexPath(forItem: 0, inSection: 2), atScrollPosition: .Left, animated: false)
+        calendarCollectionView.scrollToItemAtIndexPath(NSIndexPath(forItem: 0, inSection: currentMonthPosition), atScrollPosition: .Left, animated: false)
     }
 
     /**
@@ -134,12 +136,47 @@ public class Calendar: UIViewController {
             monthsShowing.append(currentMonth)
         } else {
             // If we want to scroll between months then put two months on both sides of the current month
-            monthsShowing.append(Month(otherMonth: currentMonth, offsetMonths: -2))
-            monthsShowing.append(Month(otherMonth: currentMonth, offsetMonths: -1))
+            
+            // reset the currentMonthPostion before rebuilding array
+            currentMonthPosition = 0
+            
+            if let twoMonthsBack = getFirstDayOfMonthOffsetFromCurrentMonth(-2) where isAfterMinDate(twoMonthsBack) {
+                monthsShowing.append(Month(monthDate: twoMonthsBack))
+                currentMonthPosition += 1
+            }
+            if let oneMonthsBack = getFirstDayOfMonthOffsetFromCurrentMonth(-1) where isAfterMinDate(oneMonthsBack) {
+                monthsShowing.append(Month(monthDate: oneMonthsBack))
+                currentMonthPosition += 1
+            }
             monthsShowing.append(currentMonth)
-            monthsShowing.append(Month(otherMonth: currentMonth, offsetMonths: 1))
-            monthsShowing.append(Month(otherMonth: currentMonth, offsetMonths: 2))
+            if let oneMonthForward = getFirstDayOfMonthOffsetFromCurrentMonth(1) where isBeforeMaxDate(oneMonthForward) {
+                monthsShowing.append(Month(monthDate: oneMonthForward))
+            }
+            if let twoMonthForward = getFirstDayOfMonthOffsetFromCurrentMonth(2) where isBeforeMaxDate(twoMonthForward) {
+                monthsShowing.append(Month(monthDate: twoMonthForward))
+            }
         }
+    }
+    
+    private func getFirstDayOfMonthOffsetFromCurrentMonth(offset: Int) -> NSDate? {
+        let calendar = NSCalendar.currentCalendar()
+        var date = calendar.dateByAddingUnit(.Month, value: offset, toDate: currentMonth.date, options: [])!
+        
+        return date
+    }
+    
+    private func isAfterMinDate(date: NSDate) -> Bool {
+        if let minDate = configuration.logicConfiguration?.minDate {
+            return (NSCalendar.currentCalendar().compareDate(minDate, toDate: date, toUnitGranularity: NSCalendarUnit.Month) != .OrderedDescending)
+        }
+        return true
+    }
+    
+    private func isBeforeMaxDate(date: NSDate) -> Bool {
+        if let maxDate = configuration.logicConfiguration?.maxDate {
+            return (NSCalendar.currentCalendar().compareDate(date, toDate: maxDate, toUnitGranularity: NSCalendarUnit.Month) != .OrderedDescending)
+        }
+        return true
     }
 
 }
@@ -161,7 +198,7 @@ public class Calendar: UIViewController {
     public func scrollViewDidEndDecelerating(scrollView: UIScrollView) {
         // if we are not on the center section
         let offset = scrollView.contentOffset.x
-        if (scrollView.contentOffset.x != self.view.frame.width * 2) {
+        if (scrollView.contentOffset.x != self.view.frame.width * CGFloat(currentMonthPosition)) {
             // reset the position of the collection view to re-center
             //            resetPosition()
             
@@ -188,11 +225,11 @@ public class Calendar: UIViewController {
             
             // reload data and move to the center of the scroll view
             calendarCollectionView.reloadData()
-            calendarCollectionView.scrollToItemAtIndexPath(NSIndexPath(forItem: 0, inSection: 2), atScrollPosition: UICollectionViewScrollPosition.Left, animated: false)
+            calendarCollectionView.scrollToItemAtIndexPath(NSIndexPath(forItem: 0, inSection: currentMonthPosition), atScrollPosition: UICollectionViewScrollPosition.Left, animated: false)
         } else {
             // If we are still in the center of the scroll view then we didn't change months
-            if (currentMonth != monthsShowing[2]) {
-                currentMonth = monthsShowing[2]
+            if (currentMonth != monthsShowing[currentMonthPosition]) {
+                currentMonth = monthsShowing[currentMonthPosition]
             }
         }
     }
