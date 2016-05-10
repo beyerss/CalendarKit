@@ -14,7 +14,7 @@ class BasicDateCollectionViewCell: UICollectionViewCell {
     private var dateIsToday: Bool = false
     private var dateIsWeekend: Bool = false
     private var dateIsSelected: Bool = false
-    private var dateIsOutsideOfMonth: Bool = false
+    private var disabled: Bool = false
     private var verticalConstraint: NSLayoutConstraint?
     private var horizontalConstraint: NSLayoutConstraint?
     // We need to store the text placement because it is needed everytime drawRect is called
@@ -33,7 +33,7 @@ class BasicDateCollectionViewCell: UICollectionViewCell {
     */
     override var highlighted: Bool {
         didSet {
-            if (!dateIsOutsideOfMonth) {
+            if (!disabled) {
                 if (highlighted) {
                     dateLabel.textColor = highlightedTextColor
                 } else {
@@ -75,16 +75,16 @@ class BasicDateCollectionViewCell: UICollectionViewCell {
      @param textPlacement Specifies the position of the text in the cell
      @param displayStyle Specifies the style of calendar that is being displayed. This will change the text size and the size of the circle that are being displayed.
     */
-    func style(dateIsToday today: Bool = false, dateIsWeekend weekend: Bool = false, dateIsSelected selected: Bool = false, dateIsOutsideOfMonth outside: Bool = false, textPlacement: DateCellStyle, font: UIFont, circleSizeOffset: CGFloat?, calendarConfiguration: CalendarConfiguration?) {
+    func style(dateIsToday today: Bool = false, dateIsWeekend weekend: Bool = false, dateIsSelected selected: Bool = false, disabled: Bool = false, textPlacement: DateCellStyle, font: UIFont, circleSizeOffset: CGFloat?, calendarConfiguration: CalendarConfiguration?) {
         // store passed in parameters
         dateIsToday = today
         dateIsWeekend = weekend
         dateIsSelected = selected
-        dateIsOutsideOfMonth = outside
+        self.disabled = disabled
         self.textPlacement = textPlacement
         self.circleSizeOffset = circleSizeOffset
         
-        if (dateIsOutsideOfMonth) {
+        if (disabled) {
             // Style dates outside of the current month
             if let config = calendarConfiguration?.dateCellConfiguration {
                 backgroundColor = config.disabledBackgroundColor

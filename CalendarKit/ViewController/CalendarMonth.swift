@@ -269,7 +269,7 @@ extension CalendarMonth: UICollectionViewDataSource {
     private func setupStyle(dateCell dateCell: BasicDateCollectionViewCell, indexPath: NSIndexPath) {
         // Get the date for today
         let date = monthToDisplay.getDateForCell(indexPath: indexPath)
-        let outsideOfMonth = monthToDisplay.isDateOutOfMonth(date)
+        let disabled = !shouldEnable(date: date)
         
         // Figure out the current day of the month
         let day = NSCalendar.currentCalendar().components(.Day, fromDate: date).day
@@ -299,11 +299,11 @@ extension CalendarMonth: UICollectionViewDataSource {
         
         // give the date cell the info it needs for styling properly
         if (dateIsSelected(date)) {
-            dateCell.style(dateIsSelected: true, dateIsOutsideOfMonth: outsideOfMonth, textPlacement: cellStyle, font: font, circleSizeOffset: circleSizeOffset, calendarConfiguration: calendarConfiguration)
+            dateCell.style(dateIsSelected: true, disabled: disabled, textPlacement: cellStyle, font: font, circleSizeOffset: circleSizeOffset, calendarConfiguration: calendarConfiguration)
         } else if (dateIsToday(date)) {
-            dateCell.style(dateIsToday: true, dateIsOutsideOfMonth: outsideOfMonth, textPlacement: cellStyle, font: font, circleSizeOffset: circleSizeOffset, calendarConfiguration: calendarConfiguration)
+            dateCell.style(dateIsToday: true, disabled: disabled, textPlacement: cellStyle, font: font, circleSizeOffset: circleSizeOffset, calendarConfiguration: calendarConfiguration)
         } else {
-            dateCell.style(dateIsOutsideOfMonth: outsideOfMonth, textPlacement: cellStyle, font: font, circleSizeOffset: circleSizeOffset, calendarConfiguration: calendarConfiguration)
+            dateCell.style(disabled: disabled, textPlacement: cellStyle, font: font, circleSizeOffset: circleSizeOffset, calendarConfiguration: calendarConfiguration)
         }
     }
     
@@ -317,7 +317,7 @@ extension CalendarMonth: UICollectionViewDelegate {
         if (indexPath.section == 2) {
             // determine if the date is in the current month
             let date = monthToDisplay.getDateForCell(indexPath: indexPath)
-            if (monthToDisplay.isDateOutOfMonth(date)) {
+            if (!shouldEnable(date: date)) {
                 // The date is outside of the current month so we will not select it
                 return
             }
@@ -416,6 +416,35 @@ extension CalendarMonth {
     func dateIsToday(date: NSDate) -> Bool {
         // compare current date against the given date
         return datesAreEqual(firstDate: date, secondDate: NSDate())
+    }
+    
+    /**
+     Checks to see if a date should be enabled.
+    */
+    func shouldEnable(date date: NSDate) -> Bool {
+        // disable date if we are outside of the current month
+        if (monthToDisplay.isDateOutOfMonth(date)) {
+            // The date is outside of the current month so it should be disabled
+            return false
+        }
+        
+        // check to see if we have a minimum date
+        if let minDate = containingCalendar?.configuration.logicConfiguration?.minDate {
+            // disabeld if the date is before the min date
+            if (NSCalendar.currentCalendar().compareDate(minDate, toDate: date, toUnitGranularity: NSCalendarUnit.Day) == .OrderedDescending) {
+                return false
+            }
+        }
+        
+        // check to see if we have a max date
+        if let maxDate = containingCalendar?.configuration.logicConfiguration?.maxDate {
+            // disabled if the date is after the max date
+            if (NSCalendar.currentCalendar().compareDate(maxDate, toDate: date, toUnitGranularity: .Day) == .OrderedAscending) {
+                return false
+            }
+        }
+        
+        return true
     }
     
 }

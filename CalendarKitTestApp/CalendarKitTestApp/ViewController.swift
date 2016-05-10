@@ -72,7 +72,10 @@ class ViewController: UIViewController {
             let monthHeaderConfig = HeaderConfiguration(font: UIFont(name: "AmericanTypewriter-Bold", size: 30)!, textColor: UIColor.lightGrayColor(), backgroundColor: UIColor.purpleColor(), height: 40.0)
             let weekdayHeaderConfig = HeaderConfiguration(font: UIFont(name: "AmericanTypewriter", size: 13)!, textColor: UIColor.lightGrayColor(), backgroundColor: weekdayHeaderColor, height: 20.0)
             
-            let config = CalendarConfiguration(displayStyle: .Custom, monthFormat: "MMMM yyyy", calendarBackgroundColor: UIColor.lightGrayColor(), hasDynamicHeight: true, spaceBetweenDates: 4.0, monthHeaderConfiguration: monthHeaderConfig, weekdayHeaderConfiguration: weekdayHeaderConfig, dateCellConfiguration: dateCellConfiguration)
+            // Today is the min date, 31 days from now is the max date
+            let logicConfig = CalendarLogicConfiguration(minDate: NSDate(), maxDate: NSDate().dateByAddingTimeInterval(60 * 60 * 24 * 31))
+            
+            let config = CalendarConfiguration(displayStyle: .Custom, monthFormat: "MMMM yyyy", calendarBackgroundColor: UIColor.lightGrayColor(), hasDynamicHeight: true, spaceBetweenDates: 4.0, monthHeaderConfiguration: monthHeaderConfig, weekdayHeaderConfiguration: weekdayHeaderConfig, dateCellConfiguration: dateCellConfiguration, logicConfiguration: logicConfig)
             embeddedCalendar = Calendar(configuration: config)
             embeddedCalendar?.delegate = self
             

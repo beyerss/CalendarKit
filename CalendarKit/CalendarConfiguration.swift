@@ -110,6 +110,26 @@ public struct HeaderConfiguration {
     
 }
 
+/**
+ Configuration settings that pertain to the logic of enabling and disabling dates.
+ */
+public struct CalendarLogicConfiguration {
+    
+    /// Specifies the minimum date to be enabled.
+    private(set) public var minDate: NSDate?
+    /// Specifies the maximum date to be enabled.
+    private(set) public var maxDate: NSDate?
+    /// Specifies any dates within the <code>minDate</code> and <code>maxDate</code> that should also be disabled.
+    private(set) public var disabledDates: [NSDate]?
+    
+    public init(minDate: NSDate? = nil, maxDate: NSDate? = nil, disabledDates: [NSDate]? = nil) {
+        self.minDate = minDate
+        self.maxDate = maxDate
+        self.disabledDates = disabledDates
+    }
+    
+}
+
 public struct CalendarConfiguration {
 
     /// Specifies the display style for this calendar.
@@ -130,6 +150,9 @@ public struct CalendarConfiguration {
     /// Specifies configuration settings specific to the weekday header.
     private(set) public var weekdayHeaderConfiguration: HeaderConfiguration
     
+    /// Specifies calendar logic for enabling and disabling dates
+    private(set) public var logicConfiguration: CalendarLogicConfiguration?
+    
     public static func FullScreenConfiguration() -> CalendarConfiguration {
         let dateCellConfiguration = DateCellConfiguration(textStyle: .TopCenter(verticalOffset: 17), circleSizeOffset: nil, font: UIFont.preferredDateFont(), backgroundColor: CalendarDesignKit.dateBackgroundColor, disabledBackgroundColor: CalendarDesignKit.calendarDisabledDateColor, highlightColor: CalendarDesignKit.calendarDateColor, textEnabledColor: UIColor.blackColor(), textDisabledColor: UIColor.whiteColor().colorWithAlphaComponent(0.6), textHighlightedColor: UIColor.blackColor().colorWithAlphaComponent(0.3), textSelectedColor: UIColor.whiteColor(), heightForDynamicHeightRows: 0.0)
         let monthHeaderConfig = HeaderConfiguration(font: UIFont.preferredMonthHeaderFont(), textColor: UIColor.whiteColor(), backgroundColor: CalendarDesignKit.calendarDateColor, height: 50.0)
@@ -149,7 +172,7 @@ public struct CalendarConfiguration {
     /**
      Initializer to setup the configuration.
     */
-    public init(displayStyle: DisplayStyle, monthFormat: String, calendarBackgroundColor: UIColor, hasDynamicHeight: Bool, spaceBetweenDates: CGFloat, monthHeaderConfiguration: HeaderConfiguration, weekdayHeaderConfiguration: HeaderConfiguration, dateCellConfiguration: DateCellConfiguration) {
+    public init(displayStyle: DisplayStyle, monthFormat: String, calendarBackgroundColor: UIColor, hasDynamicHeight: Bool, spaceBetweenDates: CGFloat, monthHeaderConfiguration: HeaderConfiguration, weekdayHeaderConfiguration: HeaderConfiguration, dateCellConfiguration: DateCellConfiguration, logicConfiguration: CalendarLogicConfiguration? = nil) {
         
         self.displayStyle = displayStyle
         self.monthFormat = monthFormat
@@ -159,6 +182,7 @@ public struct CalendarConfiguration {
         self.dateCellConfiguration = dateCellConfiguration
         self.monthHeaderConfiguration = monthHeaderConfiguration
         self.weekdayHeaderConfiguration = weekdayHeaderConfiguration
+        self.logicConfiguration = logicConfiguration
     }
     
 }
