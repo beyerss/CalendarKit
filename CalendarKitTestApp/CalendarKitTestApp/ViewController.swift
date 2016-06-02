@@ -120,11 +120,65 @@ extension ViewController: CalendarDelegate {
         }
     }
     
-    func calendar(calendar: Calendar, didScrollToDate date: NSDate, withNumberOfWeeks weeks: Int) {
-        print("Scrolled to date (\(date)) with \(weeks) weeks")
-        if (calendar == embeddedCalendar) {
-            
+    func acessory(forDate date: NSDate, onCalendar calendar: Calendar) -> CalendarAccessory? {
+        if (calendar != embeddedCalendar) {
+            return nil
         }
+        
+        var accessories = [UIView]()
+        if (dateIsDivisibleBy(date: date, divisibleBy: 6)) {
+            let accessoryView = UIView()
+            accessoryView.backgroundColor = UIColor(red: 91/255, green: 82/255, blue: 174/255, alpha: 1)
+            accessoryView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("[accessoryView(10)]", options: NSLayoutFormatOptions.AlignAllTop, metrics: nil, views: ["accessoryView": accessoryView]))
+            accessoryView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[accessoryView(10)]", options: NSLayoutFormatOptions.AlignAllTop, metrics: nil, views: ["accessoryView": accessoryView]))
+            accessories.append(accessoryView)
+        }
+        if (dateIsDivisibleBy(date: date, divisibleBy: 8)) {
+            let accessoryView = UIView()
+            accessoryView.backgroundColor = UIColor(red: 216/255, green: 143/255, blue: 19/255, alpha: 1)
+            accessoryView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("[accessoryView(10)]", options: NSLayoutFormatOptions.AlignAllTop, metrics: nil, views: ["accessoryView": accessoryView]))
+            accessoryView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[accessoryView(10)]", options: NSLayoutFormatOptions.AlignAllTop, metrics: nil, views: ["accessoryView": accessoryView]))
+            accessories.append(accessoryView)
+        }
+        
+        if (accessories.count > 0) {
+            let accessoryView = UIView()
+            accessoryView.backgroundColor = UIColor.clearColor()
+            
+            var previousView: UIView?
+            // add all views and fill them vertically
+            for aView in accessories {
+                aView.translatesAutoresizingMaskIntoConstraints = false
+                accessoryView.addSubview(aView)
+                accessoryView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-(0)-[aView]-(0)-|", options: .AlignAllRight, metrics: nil, views: ["aView": aView]))
+                
+                if let previousView = previousView {
+                    accessoryView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("[aView]-(0)-[previousView]", options: .AlignAllTop, metrics: nil, views: ["aView": aView, "previousView": previousView]))
+                }
+                previousView = aView
+            }
+            // pin first view to right edge
+            accessoryView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("[firstView]-(0)-|", options: .AlignAllRight, metrics: nil, views: ["firstView": accessories.first!]))
+            // pin last view to left edge
+            accessoryView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("|-(0)-[lastView]", options: .AlignAllLeft, metrics: nil, views: ["lastView": accessories.last!]))
+            
+            return CalendarAccessory(placement: ViewPlacement.BottomRight(verticalOffset: 2, horizontalOffset: 2), view: accessoryView)
+        }
+        return nil
+    }
+    
+    private func dateIsDivisibleBy(date dateOne: NSDate, divisibleBy: Int) -> Bool {
+        // Get the calendar
+        let calendar = NSCalendar.currentCalendar()
+        // Set the componenets for each date
+        let firstComponents = calendar.components([.Day], fromDate: dateOne)
+        
+        // compare the day, month and year between the two date componenets
+        if (firstComponents.day % divisibleBy == 0) {
+            return true
+        }
+        
+        return false
     }
     
 }

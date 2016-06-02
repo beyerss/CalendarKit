@@ -23,7 +23,7 @@ public enum DisplayStyle {
 /**
  The styles available for the date cells. These options are the styles available for placement of the date text in a cell
  */
-public enum DateCellStyle {
+public enum ViewPlacement {
     /// Puts the date text near the top of the cell at a constant distance from the top and centered horizontally.
     case TopCenter(verticalOffset: CGFloat)
     /// Puts the date text near the top-left of the cell at a constant distance from the top and a constant distance from the left.
@@ -50,7 +50,7 @@ public enum DateCellStyle {
 public struct DateCellConfiguration {
     
     /// The text style that determines the placement of the cell text.
-    private(set) public var textStyle: DateCellStyle
+    private(set) public var textStyle: ViewPlacement
     /// The offset of the circle size. Default circle size will be half of the the smaller of the two dimensions (height and width).
     private(set) public var circleSizeOffset: CGFloat?
     /// The font for the text.
@@ -72,7 +72,7 @@ public struct DateCellConfiguration {
     /// The height of the cell if the calendar is set up to have a dynamic height.
     private(set) public var heightForDynamicHeightRows: CGFloat
     
-    public init(textStyle: DateCellStyle, circleSizeOffset: CGFloat?, font: UIFont, backgroundColor: UIColor, disabledBackgroundColor: UIColor, highlightColor: UIColor, textEnabledColor: UIColor, textDisabledColor: UIColor, textHighlightedColor: UIColor, textSelectedColor: UIColor, heightForDynamicHeightRows: CGFloat) {
+    public init(textStyle: ViewPlacement, circleSizeOffset: CGFloat?, font: UIFont, backgroundColor: UIColor, disabledBackgroundColor: UIColor, highlightColor: UIColor, textEnabledColor: UIColor, textDisabledColor: UIColor, textHighlightedColor: UIColor, textSelectedColor: UIColor, heightForDynamicHeightRows: CGFloat) {
         self.textStyle = textStyle
         self.circleSizeOffset = circleSizeOffset
         self.font = font

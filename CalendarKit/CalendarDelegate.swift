@@ -8,7 +8,7 @@
 
 import Foundation
 
-@objc public protocol CalendarDelegate {
+public protocol CalendarDelegate {
     
     //MARK: These methods let the user know whats happening
     
@@ -18,7 +18,7 @@ import Foundation
     * @parameter calendar The calendar that selected the new date
     * @parameter date The new date that was selected
     **/
-    optional func calendar(calendar: Calendar, didSelectDate date: NSDate)
+    func calendar(calendar: Calendar, didSelectDate date: NSDate)
     
     /**
     * Notifies the delegate that the calendar scrolled to a new month. This
@@ -30,6 +30,24 @@ import Foundation
     * @parameter date A random day in the month that was selected
     * @parameter weeks The number of weeks in the new month
     **/
-    optional func calendar(calendar: Calendar, didScrollToDate date: NSDate, withNumberOfWeeks weeks: Int)
+    func calendar(calendar: Calendar, didScrollToDate date: NSDate, withNumberOfWeeks weeks: Int)
+    
+    /**
+     Asks the delegate if there should be an accessory view on the current date.
+    **/
+    func acessory(forDate date: NSDate, onCalendar calendar: Calendar) -> CalendarAccessory?
+    
+}
+
+public extension CalendarDelegate {
+    
+    func calendar(calendar: Calendar, didScrollToDate date: NSDate, withNumberOfWeeks weeks: Int) {
+        // Do nothing here
+    }
+    
+    func acessory(forDate date: NSDate, onCalendar calendar: Calendar) -> CalendarAccessory? {
+        // I don't have any accessory views by default
+        return nil
+    }
     
 }

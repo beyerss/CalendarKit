@@ -30,6 +30,7 @@
 		C8B3D0FA1B10A85D00B76982 /* BasicDateCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8B3D0F81B10A85D00B76982 /* BasicDateCollectionViewCell.swift */; };
 		C8B3D0FC1B10A85D00B76982 /* BasicDateCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = C8B3D0F91B10A85D00B76982 /* BasicDateCollectionViewCell.xib */; };
 		C8B3D0FD1B10A85D00B76982 /* BasicDateCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = C8B3D0F91B10A85D00B76982 /* BasicDateCollectionViewCell.xib */; };
+		C8B91D761D00B4DF00D5C557 /* CalendarAccessory.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8B91D751D00B4DF00D5C557 /* CalendarAccessory.swift */; };
 		C8CEF7E51B326C860002404C /* CalendarDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8CEF7E41B326C860002404C /* CalendarDelegate.swift */; };
 		C8CEF7E61B326C860002404C /* CalendarDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8CEF7E41B326C860002404C /* CalendarDelegate.swift */; };
 		C8E669821CD58EF600FD6D11 /* CalendarConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8E669811CD58EF600FD6D11 /* CalendarConfiguration.swift */; };
@@ -67,6 +68,7 @@
 		C8B3D0F21B10A68A00B76982 /* Calendar.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = Calendar.xib; path = ViewController/Calendar.xib; sourceTree = "<group>"; };
 		C8B3D0F81B10A85D00B76982 /* BasicDateCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BasicDateCollectionViewCell.swift; path = Cells/BasicDateCollectionViewCell.swift; sourceTree = "<group>"; };
 		C8B3D0F91B10A85D00B76982 /* BasicDateCollectionViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = BasicDateCollectionViewCell.xib; path = Cells/BasicDateCollectionViewCell.xib; sourceTree = "<group>"; };
+		C8B91D751D00B4DF00D5C557 /* CalendarAccessory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CalendarAccessory.swift; sourceTree = "<group>"; };
 		C8CEF7E41B326C860002404C /* CalendarDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CalendarDelegate.swift; sourceTree = "<group>"; };
 		C8E669811CD58EF600FD6D11 /* CalendarConfiguration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CalendarConfiguration.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -128,6 +130,7 @@
 			isa = PBXGroup;
 			children = (
 				C8E669811CD58EF600FD6D11 /* CalendarConfiguration.swift */,
+				C8B91D751D00B4DF00D5C557 /* CalendarAccessory.swift */,
 				C8CEF7E41B326C860002404C /* CalendarDelegate.swift */,
 				C85E20791B249DF80080671E /* Month.swift */,
 				C8B3D0F71B10A80700B76982 /* Cells */,
@@ -315,6 +318,7 @@
 				C831361F1CD390E600883945 /* SpacerCollectionViewCell.swift in Sources */,
 				C83136131CD371A300883945 /* CalendarMonth.swift in Sources */,
 				C8B3D0F31B10A68A00B76982 /* Calendar.swift in Sources */,
+				C8B91D761D00B4DF00D5C557 /* CalendarAccessory.swift in Sources */,
 				C8B3D0FA1B10A85D00B76982 /* BasicDateCollectionViewCell.swift in Sources */,
 				C83AFA1D1B10B4FB00F04ADC /* CalendarDesignKit.swift in Sources */,
 				C8E669821CD58EF600FD6D11 /* CalendarConfiguration.swift in Sources */,

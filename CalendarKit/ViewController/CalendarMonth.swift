@@ -267,6 +267,9 @@ extension CalendarMonth: UICollectionViewDataSource {
      @param indexPath The index path where the date cell will be placed.
     */
     private func setupStyle(dateCell dateCell: BasicDateCollectionViewCell, indexPath: NSIndexPath) {
+        // I need to have a containing calendar or else I don't know how to set anything up
+        guard let containingCalendar = containingCalendar else { return }
+        
         // Get the date for today
         let date = monthToDisplay.getDateForCell(indexPath: indexPath)
         let disabled = !shouldEnable(date: date)
@@ -276,34 +279,31 @@ extension CalendarMonth: UICollectionViewDataSource {
         dateCell.dateLabel.text = "\(day)"
         
         // figure out thecell style and display style from the configuration settings
-        let calendarConfiguration = containingCalendar?.configuration
-        let cellStyle: DateCellStyle
+        let calendarConfiguration = containingCalendar.configuration
+        let cellStyle: ViewPlacement
         var circleSizeOffset: CGFloat?
         let font: UIFont
         
-        if let configuration = calendarConfiguration {
-            cellStyle = configuration.dateCellConfiguration.textStyle
-            circleSizeOffset = configuration.dateCellConfiguration.circleSizeOffset
-            font = configuration.dateCellConfiguration.font
-            
-            dateCell.circleColor = configuration.dateCellConfiguration.highlightColor
-            // set up font styles
-            dateCell.enabledTextColor = configuration.dateCellConfiguration.textEnabledColor
-            dateCell.disabledTextColor = configuration.dateCellConfiguration.textDisabledColor
-            dateCell.highlightedTextColor = configuration.dateCellConfiguration.textHighlightedColor
-            dateCell.selectedTextColor = configuration.dateCellConfiguration.textSelectedColor
-        } else {
-            cellStyle = .TopCenter(verticalOffset: 17)
-            font = UIFont.preferredDateFont()
-        }
+        cellStyle = calendarConfiguration.dateCellConfiguration.textStyle
+        circleSizeOffset = calendarConfiguration.dateCellConfiguration.circleSizeOffset
+        font = calendarConfiguration.dateCellConfiguration.font
+        
+        dateCell.circleColor = calendarConfiguration.dateCellConfiguration.highlightColor
+        // set up font styles
+        dateCell.enabledTextColor = calendarConfiguration.dateCellConfiguration.textEnabledColor
+        dateCell.disabledTextColor = calendarConfiguration.dateCellConfiguration.textDisabledColor
+        dateCell.highlightedTextColor = calendarConfiguration.dateCellConfiguration.textHighlightedColor
+        dateCell.selectedTextColor = calendarConfiguration.dateCellConfiguration.textSelectedColor
+        
+        let accessory = containingCalendar.delegate?.acessory(forDate: date, onCalendar: containingCalendar)
         
         // give the date cell the info it needs for styling properly
         if (dateIsSelected(date)) {
-            dateCell.style(dateIsSelected: true, disabled: disabled, textPlacement: cellStyle, font: font, circleSizeOffset: circleSizeOffset, calendarConfiguration: calendarConfiguration)
+            dateCell.style(dateIsSelected: true, disabled: disabled, textPlacement: cellStyle, font: font, circleSizeOffset: circleSizeOffset, calendarConfiguration: calendarConfiguration, accessory: accessory)
         } else if (dateIsToday(date)) {
-            dateCell.style(dateIsToday: true, disabled: disabled, textPlacement: cellStyle, font: font, circleSizeOffset: circleSizeOffset, calendarConfiguration: calendarConfiguration)
+            dateCell.style(dateIsToday: true, disabled: disabled, textPlacement: cellStyle, font: font, circleSizeOffset: circleSizeOffset, calendarConfiguration: calendarConfiguration, accessory: accessory)
         } else {
-            dateCell.style(disabled: disabled, textPlacement: cellStyle, font: font, circleSizeOffset: circleSizeOffset, calendarConfiguration: calendarConfiguration)
+            dateCell.style(disabled: disabled, textPlacement: cellStyle, font: font, circleSizeOffset: circleSizeOffset, calendarConfiguration: calendarConfiguration, accessory: accessory)
         }
     }
     
@@ -324,7 +324,7 @@ extension CalendarMonth: UICollectionViewDelegate {
             
             // Get the cell style and display style from configuration settings
             let configuration = containingCalendar?.configuration
-            let cellStyle: DateCellStyle
+            let cellStyle: ViewPlacement
             var circleOffset: CGFloat?
             let font: UIFont
             
@@ -345,20 +345,20 @@ extension CalendarMonth: UICollectionViewDelegate {
                 if let previousPath = collectionView.indexPathForCell(previousSelected) {
                     setupStyle(dateCell: previousSelected, indexPath: previousPath)
                 } else {
-                    previousSelected.style(textPlacement: cellStyle, font: font, circleSizeOffset: circleOffset, calendarConfiguration: configuration)
+                    previousSelected.style(textPlacement: cellStyle, font: font, circleSizeOffset: circleOffset, calendarConfiguration: configuration, accessory: previousSelected.accessory)
                 }
             }
             
             if let dateCell = collectionView.cellForItemAtIndexPath(indexPath) as? BasicDateCollectionViewCell {
                 // update the style of the newly selected cell
-                dateCell.style(dateIsSelected: true, textPlacement: cellStyle, font: font, circleSizeOffset: circleOffset, calendarConfiguration: configuration)
+                dateCell.style(dateIsSelected: true, textPlacement: cellStyle, font: font, circleSizeOffset: circleOffset, calendarConfiguration: configuration, accessory: dateCell.accessory)
                 // remember that this cell is now selected
                 selectedCell = dateCell
             }
             
             // notify the delegate that a new date was selected
             if let calendar = containingCalendar, date = calendar.selectedDate {
-                calendar.delegate?.calendar?(calendar, didSelectDate: date)
+                calendar.delegate?.calendar(calendar, didSelectDate: date)
             }
         }
     }

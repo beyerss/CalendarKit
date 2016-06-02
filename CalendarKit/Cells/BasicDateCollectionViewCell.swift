@@ -18,9 +18,12 @@ class BasicDateCollectionViewCell: UICollectionViewCell {
     private var verticalConstraint: NSLayoutConstraint?
     private var horizontalConstraint: NSLayoutConstraint?
     // We need to store the text placement because it is needed everytime drawRect is called
-    private var textPlacement: DateCellStyle = .TopCenter(verticalOffset: 17)
+    private var textPlacement: ViewPlacement = .TopCenter(verticalOffset: 17)
     private var circleSizeOffset: CGFloat?
     var circleColor: UIColor?
+    
+    // Accessory view
+    var accessory: CalendarAccessory?
     
     // Text colors
     var highlightedTextColor = UIColor.blackColor().colorWithAlphaComponent(0.3)
@@ -52,6 +55,12 @@ class BasicDateCollectionViewCell: UICollectionViewCell {
         dateIsSelected = false
         
         dateLabel.textColor = enabledTextColor
+        
+        // If there was an accessory, remove it
+        if let accessory = accessory {
+            accessory.view.removeFromSuperview()
+        }
+        accessory = nil
     }
     
     override func awakeFromNib() {
@@ -75,7 +84,7 @@ class BasicDateCollectionViewCell: UICollectionViewCell {
      @param textPlacement Specifies the position of the text in the cell
      @param displayStyle Specifies the style of calendar that is being displayed. This will change the text size and the size of the circle that are being displayed.
     */
-    func style(dateIsToday today: Bool = false, dateIsWeekend weekend: Bool = false, dateIsSelected selected: Bool = false, disabled: Bool = false, textPlacement: DateCellStyle, font: UIFont, circleSizeOffset: CGFloat?, calendarConfiguration: CalendarConfiguration?) {
+    func style(dateIsToday today: Bool = false, dateIsWeekend weekend: Bool = false, dateIsSelected selected: Bool = false, disabled: Bool = false, textPlacement: ViewPlacement, font: UIFont, circleSizeOffset: CGFloat?, calendarConfiguration: CalendarConfiguration?, accessory: CalendarAccessory?) {
         // store passed in parameters
         dateIsToday = today
         dateIsWeekend = weekend
@@ -114,47 +123,24 @@ class BasicDateCollectionViewCell: UICollectionViewCell {
         // Set the font and size
         dateLabel.font = font
         
+        // set up the accessory
+        setupAccessory(accessory)
+        
         setNeedsDisplay()
     }
     
     /**
      Updates the constraints on the UILabel to position them properly.
     */
-    private func setupText(placement: DateCellStyle) {
+    private func setupText(placement: ViewPlacement) {
         // remove the old constraint if it exists - this could happen with cell reuse
         if let verticalConstraint = verticalConstraint, horizontalConstraint = horizontalConstraint {
             contentView.removeConstraints([verticalConstraint, horizontalConstraint])
         }
         
-        switch placement {
-        case .TopLeft(verticalOffset: let vOffset, horizontalOffset: let hOffset):
-            verticalConstraint = makeVerticalConstraint(padding: vOffset)
-            horizontalConstraint = makeHorizontalConstraint(padding: hOffset)
-        case .TopCenter(verticalOffset: let offset):
-            verticalConstraint = makeVerticalConstraint(padding: offset)
-            horizontalConstraint = makeHorizontalConstraint(centered: true)
-        case .TopRight(verticalOffset: let vOffset, horizontalOffset: let hOffset):
-            verticalConstraint = makeVerticalConstraint(padding: vOffset)
-            horizontalConstraint = makeHorizontalConstraint(padding: hOffset, pinnedToLeft: false)
-        case .CenterLeft(horizontalOffset: let hOffset):
-            verticalConstraint = makeVerticalConstraint(centered: true)
-            horizontalConstraint = makeHorizontalConstraint(padding: hOffset)
-        case .CenterCenter:
-            verticalConstraint = makeVerticalConstraint(centered: true)
-            horizontalConstraint = makeHorizontalConstraint(centered: true)
-        case .CenterRight(horizontalOffset: let hOffset):
-            verticalConstraint = makeVerticalConstraint(centered: true)
-            horizontalConstraint = makeHorizontalConstraint(padding: hOffset, pinnedToLeft: false)
-        case .BottomLeft(verticalOffset: let vOffset, horizontalOffset: let hOffset):
-            verticalConstraint = makeVerticalConstraint(padding: vOffset, pinnedToTop: false)
-            horizontalConstraint = makeHorizontalConstraint(padding: hOffset)
-        case .BottomCenter(verticalOffset: let vOffset):
-            verticalConstraint = makeVerticalConstraint(padding: vOffset, pinnedToTop: false)
-            horizontalConstraint = makeHorizontalConstraint(centered: true)
-        case .BottomRight(verticalOffset: let vOffset, horizontalOffset: let hOffset):
-            verticalConstraint = makeVerticalConstraint(padding: vOffset, pinnedToTop: false)
-            horizontalConstraint = makeHorizontalConstraint(padding: hOffset, pinnedToLeft: false)
-        }
+        let newConstraints = makeConstraints(forView: dateLabel, withPlacement: placement)
+        verticalConstraint = newConstraints.verticalConstraint
+        horizontalConstraint = newConstraints.horizontalConstraint
         
         // add new constraint
         if let verticalConstraint = verticalConstraint, horizontalConstraint = horizontalConstraint {
@@ -162,26 +148,80 @@ class BasicDateCollectionViewCell: UICollectionViewCell {
         }
     }
     
-    private func makeVerticalConstraint(padding padding: CGFloat = 0.0, centered: Bool = false, pinnedToTop: Bool = true) -> NSLayoutConstraint {
+    /**
+     Sets up the accessory if there is one
+    */
+    private func setupAccessory(accessory: CalendarAccessory?) {
+        guard let accessory = accessory else { return }
+        
+        // keep track of the accessory for cell re-use
+        self.accessory = accessory
+        
+        accessory.view.translatesAutoresizingMaskIntoConstraints = false
+        contentView.addSubview(accessory.view)
+        
+        let accessoryConstraints = makeConstraints(forView: accessory.view, withPlacement: accessory.placement)
+        contentView.addConstraint(accessoryConstraints.verticalConstraint)
+        contentView.addConstraint(accessoryConstraints.horizontalConstraint)
+    }
+    
+    private func makeConstraints(forView view: UIView, withPlacement placement: ViewPlacement) -> (verticalConstraint: NSLayoutConstraint, horizontalConstraint: NSLayoutConstraint) {
+        let vConstraint: NSLayoutConstraint
+        let hConstraint: NSLayoutConstraint
+        
+        switch placement {
+        case .TopLeft(verticalOffset: let vOffset, horizontalOffset: let hOffset):
+            vConstraint = makeVerticalConstraint(forView: view, padding: vOffset)
+            hConstraint = makeHorizontalConstraint(forView: view, padding: hOffset)
+        case .TopCenter(verticalOffset: let offset):
+            vConstraint = makeVerticalConstraint(forView: view, padding: offset)
+            hConstraint = makeHorizontalConstraint(forView: view, centered: true)
+        case .TopRight(verticalOffset: let vOffset, horizontalOffset: let hOffset):
+            vConstraint = makeVerticalConstraint(forView: view, padding: vOffset)
+            hConstraint = makeHorizontalConstraint(forView: view, padding: hOffset, pinnedToLeft: false)
+        case .CenterLeft(horizontalOffset: let hOffset):
+            vConstraint = makeVerticalConstraint(forView: view, centered: true)
+            hConstraint = makeHorizontalConstraint(forView: view, padding: hOffset)
+        case .CenterCenter:
+            vConstraint = makeVerticalConstraint(forView: view, centered: true)
+            hConstraint = makeHorizontalConstraint(forView: view, centered: true)
+        case .CenterRight(horizontalOffset: let hOffset):
+            vConstraint = makeVerticalConstraint(forView: view, centered: true)
+            hConstraint = makeHorizontalConstraint(forView: view, padding: hOffset, pinnedToLeft: false)
+        case .BottomLeft(verticalOffset: let vOffset, horizontalOffset: let hOffset):
+            vConstraint = makeVerticalConstraint(forView: view, padding: vOffset, pinnedToTop: false)
+            hConstraint = makeHorizontalConstraint(forView: view, padding: hOffset)
+        case .BottomCenter(verticalOffset: let vOffset):
+            vConstraint = makeVerticalConstraint(forView: view, padding: vOffset, pinnedToTop: false)
+            hConstraint = makeHorizontalConstraint(forView: view, centered: true)
+        case .BottomRight(verticalOffset: let vOffset, horizontalOffset: let hOffset):
+            vConstraint = makeVerticalConstraint(forView: view, padding: vOffset, pinnedToTop: false)
+            hConstraint = makeHorizontalConstraint(forView: view, padding: hOffset, pinnedToLeft: false)
+        }
+        
+        return (vConstraint, hConstraint)
+    }
+    
+    private func makeVerticalConstraint(forView view: UIView, padding: CGFloat = 0.0, centered: Bool = false, pinnedToTop: Bool = true) -> NSLayoutConstraint {
         if (centered) {
-            return NSLayoutConstraint(item: dateLabel, attribute: .CenterY, relatedBy: .Equal, toItem: contentView, attribute: .CenterY, multiplier: 1.0, constant: 0)
+            return NSLayoutConstraint(item: view, attribute: .CenterY, relatedBy: .Equal, toItem: contentView, attribute: .CenterY, multiplier: 1.0, constant: 0)
         } else {
             if (pinnedToTop) {
-                return NSLayoutConstraint(item: dateLabel, attribute: .Top, relatedBy: .Equal, toItem: contentView, attribute: .Top, multiplier: 1.0, constant: padding)
+                return NSLayoutConstraint(item: view, attribute: .Top, relatedBy: .Equal, toItem: contentView, attribute: .Top, multiplier: 1.0, constant: padding)
             } else {
-                return NSLayoutConstraint(item: contentView, attribute: .Bottom, relatedBy: .Equal, toItem: dateLabel, attribute: .Bottom, multiplier: 1.0, constant: padding)
+                return NSLayoutConstraint(item: contentView, attribute: .Bottom, relatedBy: .Equal, toItem: view, attribute: .Bottom, multiplier: 1.0, constant: padding)
             }
         }
     }
     
-    private func makeHorizontalConstraint(padding padding: CGFloat = 0.0, centered: Bool = false, pinnedToLeft: Bool = true) -> NSLayoutConstraint {
+    private func makeHorizontalConstraint(forView view: UIView, padding: CGFloat = 0.0, centered: Bool = false, pinnedToLeft: Bool = true) -> NSLayoutConstraint {
         if (centered) {
-            return NSLayoutConstraint(item: dateLabel, attribute: .CenterX, relatedBy: .Equal, toItem: contentView, attribute: .CenterX, multiplier: 1.0, constant: 0)
+            return NSLayoutConstraint(item: view, attribute: .CenterX, relatedBy: .Equal, toItem: contentView, attribute: .CenterX, multiplier: 1.0, constant: 0)
         } else {
             if (pinnedToLeft) {
-                return NSLayoutConstraint(item: dateLabel, attribute: .Left, relatedBy: .Equal, toItem: contentView, attribute: .Left, multiplier: 1.0, constant: padding)
+                return NSLayoutConstraint(item: view, attribute: .Left, relatedBy: .Equal, toItem: contentView, attribute: .Left, multiplier: 1.0, constant: padding)
             } else {
-                return NSLayoutConstraint(item: contentView, attribute: .Right, relatedBy: .Equal, toItem: dateLabel, attribute: .Right, multiplier: 1.0, constant: padding)
+                return NSLayoutConstraint(item: contentView, attribute: .Right, relatedBy: .Equal, toItem: view, attribute: .Right, multiplier: 1.0, constant: padding)
             }
         }
     }

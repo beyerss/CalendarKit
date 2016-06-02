@@ -68,7 +68,7 @@ public class Calendar: UIViewController {
         rebuildMonths(currentMonthOnly: true)
         
         // tell the delegate what month I'm on
-        delegate?.calendar?(self, didScrollToDate: currentMonth.date, withNumberOfWeeks: currentMonth.weeksInMonth())
+        delegate?.calendar(self, didScrollToDate: currentMonth.date, withNumberOfWeeks: currentMonth.weeksInMonth())
     }
     
     override public func viewWillAppear(animated: Bool) {
@@ -239,7 +239,7 @@ public class Calendar: UIViewController {
             updateCalendarHeight()
             
             // notify the delegate that we changed months
-            delegate?.calendar?(self, didScrollToDate: currentMonth.date, withNumberOfWeeks: currentMonth.weeksInMonth())
+            delegate?.calendar(self, didScrollToDate: currentMonth.date, withNumberOfWeeks: currentMonth.weeksInMonth())
 
             // rebuild the months so that the new month is in the middle
             rebuildMonths()
