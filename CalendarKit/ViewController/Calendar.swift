@@ -91,6 +91,27 @@ public class Calendar: UIViewController {
         calendarCollectionView.reloadData()
         calendarCollectionView.scrollToItemAtIndexPath(NSIndexPath(forItem: 0, inSection: currentMonthPosition), atScrollPosition: .Left, animated: false)
     }
+    
+    public override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
+//        coordinator.animateAlongsideTransition({ (context: UIViewControllerTransitionCoordinatorContext) in
+//            // do nothing
+//        }) { [weak self](context: UIViewControllerTransitionCoordinatorContext) in
+//            self?.calendarCollectionView.collectionViewLayout.invalidateLayout()
+//            self?.view.setNeedsDisplay()
+//                self?.calendarCollectionView.reloadData()
+//        }
+        coordinator.animateAlongsideTransition({ [weak self](context) -> Void in
+            
+            self?.calendarCollectionView.collectionViewLayout.invalidateLayout()
+            
+            }, completion: { [weak self](context) -> Void in
+                guard let weakSelf = self else { return }
+                
+                weakSelf.calendarCollectionView.reloadData()
+                weakSelf.calendarCollectionView.scrollToItemAtIndexPath(NSIndexPath(forItem: 0, inSection: weakSelf.currentMonthPosition), atScrollPosition: .Left, animated: false)
+                
+        })
+    }
 
     /**
      Updates the height of the calendar if the height is supposed to be dynamic

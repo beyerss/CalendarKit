@@ -14,7 +14,14 @@ class ViewController: UIViewController {
     @IBOutlet weak var textField: UITextField!
     lazy var inputCalendar: Calendar = {
         let calendar = Calendar(configuration: CalendarConfiguration.InputViewConfiguration())
+        calendar.delegate = self
+        calendar.selectedDate = NSDate().dateByAddingTimeInterval(60*60*24)
         return calendar
+    }()
+    lazy var dateFormatter: NSDateFormatter = {
+        let formatter = NSDateFormatter()
+        formatter.dateFormat = "M/d/yy"
+        return formatter
     }()
     
     var embeddedCalendar: Calendar?
@@ -24,8 +31,6 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
-        inputCalendar.delegate = self
-        inputCalendar.selectedDate = NSDate().dateByAddingTimeInterval(60*60*24)
         
         textField.inputView = inputCalendar.view
     }
@@ -110,6 +115,7 @@ extension ViewController: CalendarDelegate {
         if (calendar != inputCalendar) {
             dismissViewControllerAnimated(true, completion: nil)
         } else {
+            textField.text = dateFormatter.stringFromDate(date)
             textField.resignFirstResponder()
         }
     }
