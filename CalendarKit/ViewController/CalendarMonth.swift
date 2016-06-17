@@ -16,7 +16,7 @@ class CalendarMonth: UICollectionViewCell {
     private let kSpacerIdentifier = "SpacerCell"
 
     @IBOutlet weak var monthCollectionView: UICollectionView!
-    var monthToDisplay = Month(monthDate: NSDate()) {
+    var monthToDisplay = Month(monthDate: Date()) {
         didSet {
             // we need to update the month header and the dates
             self.monthCollectionView.reloadData()
@@ -48,18 +48,18 @@ class CalendarMonth: UICollectionViewCell {
         super.awakeFromNib()
         
         // register all cells that are needed
-        let bundle = NSBundle(identifier: "com.beyersapps.CalendarKit")
-        monthCollectionView.registerNib(UINib(nibName: "BasicDateCollectionViewCell", bundle: bundle), forCellWithReuseIdentifier: kBasicCellIdentifier)
-        monthCollectionView.registerNib(UINib(nibName: "MonthHeaderCollectionViewCell", bundle: bundle), forCellWithReuseIdentifier: kMonthHeaderIdentifier)
-        monthCollectionView.registerNib(UINib(nibName: "WeekdayHeaderCollectionViewCell", bundle: bundle), forCellWithReuseIdentifier: kWeekdayHeaderIdentifier)
-        monthCollectionView.registerNib(UINib(nibName: "SpacerCollectionViewCell", bundle: bundle), forCellWithReuseIdentifier: kSpacerIdentifier)
+        let bundle = Bundle(identifier: "com.beyersapps.CalendarKit")
+        monthCollectionView.register(UINib(nibName: "BasicDateCollectionViewCell", bundle: bundle), forCellWithReuseIdentifier: kBasicCellIdentifier)
+        monthCollectionView.register(UINib(nibName: "MonthHeaderCollectionViewCell", bundle: bundle), forCellWithReuseIdentifier: kMonthHeaderIdentifier)
+        monthCollectionView.register(UINib(nibName: "WeekdayHeaderCollectionViewCell", bundle: bundle), forCellWithReuseIdentifier: kWeekdayHeaderIdentifier)
+        monthCollectionView.register(UINib(nibName: "SpacerCollectionViewCell", bundle: bundle), forCellWithReuseIdentifier: kSpacerIdentifier)
     }
 
 }
 
 extension CalendarMonth: UICollectionViewDelegateFlowLayout {
     
-    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         
         var monthHeight: CGFloat = 50
         var weekHeight: CGFloat = 30
@@ -74,19 +74,19 @@ extension CalendarMonth: UICollectionViewDelegateFlowLayout {
             }
         }
         
-        switch (indexPath.section) {
+        switch ((indexPath as NSIndexPath).section) {
         case 0:
             // The first item is the month header
-            if (indexPath.item == 0) {
-                return CGSizeMake(collectionView.frame.width, monthHeight)
+            if ((indexPath as NSIndexPath).item == 0) {
+                return CGSize(width: collectionView.frame.width, height: monthHeight)
             } else {
                 // The second item is a divider that can be 1px tall
-                return CGSizeMake(collectionView.frame.width, 1)
+                return CGSize(width: collectionView.frame.width, height: 1)
             }
         case 1:
             // The second section is the weekday header so calculate the height and width
             let width = (monthCollectionView.frame.size.width-(6 * cellSpacing)) / 7
-            let size = CGSizeMake(width, weekHeight)
+            let size = CGSize(width: width, height: weekHeight)
             return size
         default:
             // The third section is the actual calendar - figure out the size for each cell
@@ -95,15 +95,15 @@ extension CalendarMonth: UICollectionViewDelegateFlowLayout {
             let width = (monthCollectionView.frame.size.width-(6 * cellSpacing)) / 7
             let size: CGSize
             if let rowHeight = rowHeight {
-                size = CGSizeMake(width, rowHeight)
+                size = CGSize(width: width, height: rowHeight)
             } else {
-                size = CGSizeMake(width, (monthCollectionView.frame.size.height - dividerHeight - monthHeight - weekHeight) / CGFloat(rowsNeeded))
+                size = CGSize(width: width, height: (monthCollectionView.frame.size.height - dividerHeight - monthHeight - weekHeight) / CGFloat(rowsNeeded))
             }
             return size
         }
     }
     
-    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAtIndex section: Int) -> CGFloat
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat
     {
         switch (section) {
         case 0:
@@ -113,7 +113,7 @@ extension CalendarMonth: UICollectionViewDelegateFlowLayout {
         }
     }
     
-    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAtIndex section: Int) -> CGFloat
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat
     {
         switch (section) {
         case 0:
@@ -123,7 +123,7 @@ extension CalendarMonth: UICollectionViewDelegateFlowLayout {
         }
     }
     
-    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAtIndex section: Int) -> UIEdgeInsets {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
         // We don't need any insets
         return UIEdgeInsets(top: 0 , left: 0, bottom: 0, right: 0)
     }
@@ -132,12 +132,12 @@ extension CalendarMonth: UICollectionViewDelegateFlowLayout {
 
 extension CalendarMonth: UICollectionViewDataSource {
     
-    func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
         // always 3 sections
         return 3
     }
     
-    func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         
         switch (section) {
         case 0:
@@ -152,16 +152,16 @@ extension CalendarMonth: UICollectionViewDataSource {
         }
     }
     
-    func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
-        switch (indexPath.section) {
+        switch ((indexPath as NSIndexPath).section) {
         case 0:
-            if (indexPath.item == 0) {
+            if ((indexPath as NSIndexPath).item == 0) {
                 // build the month header cell
                 return monthHeaderCell(forCollectionView: collectionView, indexPath: indexPath)
             } else {
                 // get the spacer cell
-                let cell = collectionView.dequeueReusableCellWithReuseIdentifier(kSpacerIdentifier, forIndexPath: indexPath)
+                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: kSpacerIdentifier, for: indexPath)
                 cell.backgroundColor = self.backgroundColor
                 return cell
             }
@@ -180,8 +180,8 @@ extension CalendarMonth: UICollectionViewDataSource {
      @param forCollectionView The collection view displaying the cell.
      @param indexPath The index path where the cell will be placed.
     */
-    private func monthHeaderCell(forCollectionView collectionView: UICollectionView, indexPath: NSIndexPath) -> UICollectionViewCell {
-        let monthHeader = collectionView.dequeueReusableCellWithReuseIdentifier(kMonthHeaderIdentifier, forIndexPath: indexPath)
+    private func monthHeaderCell(forCollectionView collectionView: UICollectionView, indexPath: IndexPath) -> UICollectionViewCell {
+        let monthHeader = collectionView.dequeueReusableCell(withReuseIdentifier: kMonthHeaderIdentifier, for: indexPath)
         
         if let monthHeader = monthHeader as? MonthHeaderCollectionViewCell {
             monthHeader.monthName.text = monthToDisplay.monthName()
@@ -202,8 +202,8 @@ extension CalendarMonth: UICollectionViewDataSource {
      @param forCollectionView The collection view displaying the cell.
      @param indexPath The index path where the cell will be placed.
     */
-    private func weekdayHeaderCell(forCollectionView collectionView: UICollectionView, indexPath: NSIndexPath) -> UICollectionViewCell {
-        let weekdayHeader = collectionView.dequeueReusableCellWithReuseIdentifier(kWeekdayHeaderIdentifier, forIndexPath: indexPath)
+    private func weekdayHeaderCell(forCollectionView collectionView: UICollectionView, indexPath: IndexPath) -> UICollectionViewCell {
+        let weekdayHeader = collectionView.dequeueReusableCell(withReuseIdentifier: kWeekdayHeaderIdentifier, for: indexPath)
         
         // make sure the correct cell was created
         if let weekdayHeader = weekdayHeader as? WeekdayHeaderCollectionViewCell {
@@ -229,7 +229,7 @@ extension CalendarMonth: UICollectionViewDataSource {
                 }
             })
             // set the day text based on the mapped values
-            weekdayHeader.dayNameLabel.text = map[indexPath.row]
+            weekdayHeader.dayNameLabel.text = map[(indexPath as NSIndexPath).row]
             
             if let calendar = containingCalendar {
                 // style the cell based on the configuration settings
@@ -248,8 +248,8 @@ extension CalendarMonth: UICollectionViewDataSource {
      @param forCollectionView The collection view displaying the cell.
      @param indexPath The index path where the cell will be placed.
      */
-    private func dateCell(forCollectionView collectionView: UICollectionView, indexPath: NSIndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCellWithReuseIdentifier(kBasicCellIdentifier, forIndexPath: indexPath)
+    private func dateCell(forCollectionView collectionView: UICollectionView, indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: kBasicCellIdentifier, for: indexPath)
         
         // make sure the correct cell type was made
         if let dateCell = cell as? BasicDateCollectionViewCell {
@@ -266,17 +266,20 @@ extension CalendarMonth: UICollectionViewDataSource {
      @param dateCell The date cell to style.
      @param indexPath The index path where the date cell will be placed.
     */
-    private func setupStyle(dateCell dateCell: BasicDateCollectionViewCell, indexPath: NSIndexPath) {
+    private func setupStyle(dateCell: BasicDateCollectionViewCell, indexPath: IndexPath) {
         // I need to have a containing calendar or else I don't know how to set anything up
         guard let containingCalendar = containingCalendar else { return }
         
         // Get the date for today
         let date = monthToDisplay.getDateForCell(indexPath: indexPath)
-        let disabled = !shouldEnable(date: date)
+        let disabled = !shouldEnable(date: date as Date)
         
         // Figure out the current day of the month
-        let day = NSCalendar.currentCalendar().components(.Day, fromDate: date).day
-        dateCell.dateLabel.text = "\(day)"
+        if let day = Foundation.Calendar.current().components(.day, from: date as Date).day {
+            dateCell.dateLabel.text = "\(day)"
+        } else {
+            dateCell.dateLabel.text = ""
+        }
         
         // figure out thecell style and display style from the configuration settings
         let calendarConfiguration = containingCalendar.configuration
@@ -298,9 +301,9 @@ extension CalendarMonth: UICollectionViewDataSource {
         let accessory = containingCalendar.delegate?.acessory(forDate: date, onCalendar: containingCalendar)
         
         // give the date cell the info it needs for styling properly
-        if (dateIsSelected(date)) {
+        if (dateIsSelected(date as Date)) {
             dateCell.style(dateIsSelected: true, disabled: disabled, textPlacement: cellStyle, font: font, circleSizeOffset: circleSizeOffset, calendarConfiguration: calendarConfiguration, accessory: accessory)
-        } else if (dateIsToday(date)) {
+        } else if (dateIsToday(date as Date)) {
             dateCell.style(dateIsToday: true, disabled: disabled, textPlacement: cellStyle, font: font, circleSizeOffset: circleSizeOffset, calendarConfiguration: calendarConfiguration, accessory: accessory)
         } else {
             dateCell.style(disabled: disabled, textPlacement: cellStyle, font: font, circleSizeOffset: circleSizeOffset, calendarConfiguration: calendarConfiguration, accessory: accessory)
@@ -311,13 +314,13 @@ extension CalendarMonth: UICollectionViewDataSource {
 
 extension CalendarMonth: UICollectionViewDelegate {
     
-    func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
-        collectionView.deselectItemAtIndexPath(indexPath, animated: false)
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        collectionView.deselectItem(at: indexPath, animated: false)
         
-        if (indexPath.section == 2) {
+        if ((indexPath as NSIndexPath).section == 2) {
             // determine if the date is in the current month
             let date = monthToDisplay.getDateForCell(indexPath: indexPath)
-            if (!shouldEnable(date: date)) {
+            if (!shouldEnable(date: date as Date)) {
                 // The date is outside of the current month so we will not select it
                 return
             }
@@ -333,7 +336,7 @@ extension CalendarMonth: UICollectionViewDelegate {
                 circleOffset = configuration.dateCellConfiguration.circleSizeOffset
                 font = configuration.dateCellConfiguration.font
             } else {
-                cellStyle = .TopCenter(verticalOffset: 17)
+                cellStyle = .topCenter(verticalOffset: 17)
                 font = UIFont.preferredDateFont()
             }
             
@@ -342,14 +345,14 @@ extension CalendarMonth: UICollectionViewDelegate {
             if let previousSelected = selectedCell as? BasicDateCollectionViewCell {
                 
                 // update the style of the previously selected cell
-                if let previousPath = collectionView.indexPathForCell(previousSelected) {
+                if let previousPath = collectionView.indexPath(for: previousSelected) {
                     setupStyle(dateCell: previousSelected, indexPath: previousPath)
                 } else {
                     previousSelected.style(textPlacement: cellStyle, font: font, circleSizeOffset: circleOffset, calendarConfiguration: configuration, accessory: previousSelected.accessory)
                 }
             }
             
-            if let dateCell = collectionView.cellForItemAtIndexPath(indexPath) as? BasicDateCollectionViewCell {
+            if let dateCell = collectionView.cellForItem(at: indexPath) as? BasicDateCollectionViewCell {
                 // update the style of the newly selected cell
                 dateCell.style(dateIsSelected: true, textPlacement: cellStyle, font: font, circleSizeOffset: circleOffset, calendarConfiguration: configuration, accessory: dateCell.accessory)
                 // remember that this cell is now selected
@@ -377,12 +380,12 @@ extension CalendarMonth {
      @param secondDate The second date to evaluate
      @return A Bool value indicating if the dates are equal (true) or not (false).
     */
-    private func datesAreEqual(firstDate dateOne: NSDate, secondDate dateTwo: NSDate) -> Bool {
+    private func datesAreEqual(firstDate dateOne: Date, secondDate dateTwo: Date) -> Bool {
         // Get the calendar
-        let calendar = NSCalendar.currentCalendar()
+        let calendar = Foundation.Calendar.current()
         // Set the componenets for each date
-        let firstComponents = calendar.components([.Day, .Month, .Year], fromDate: dateOne)
-        let secondComponents = calendar.components([.Day, .Month, .Year], fromDate: dateTwo)
+        let firstComponents = calendar.components([.day, .month, .year], from: dateOne)
+        let secondComponents = calendar.components([.day, .month, .year], from: dateTwo)
         
         // compare the day, month and year between the two date componenets
         if (firstComponents.day == secondComponents.day && firstComponents.month == secondComponents.month && firstComponents.year == secondComponents.year) {
@@ -397,11 +400,11 @@ extension CalendarMonth {
      
      @param date The date that we want to check against the selected date.
     */
-    func dateIsSelected(date: NSDate) -> Bool {
+    func dateIsSelected(_ date: Date) -> Bool {
         // Check to see if there is a previously selected date
         if let selected = containingCalendar?.selectedDate {
             // compare the selected date with the given date
-            return datesAreEqual(firstDate: date, secondDate: selected)
+            return datesAreEqual(firstDate: date, secondDate: selected as Date)
         }
         
         // If no date was selected then this will needs to return false
@@ -413,15 +416,15 @@ extension CalendarMonth {
      
      @param date The date that we want to check against the current date.
     */
-    func dateIsToday(date: NSDate) -> Bool {
+    func dateIsToday(_ date: Date) -> Bool {
         // compare current date against the given date
-        return datesAreEqual(firstDate: date, secondDate: NSDate())
+        return datesAreEqual(firstDate: date, secondDate: Date())
     }
     
     /**
      Checks to see if a date should be enabled.
     */
-    func shouldEnable(date date: NSDate) -> Bool {
+    func shouldEnable(date: Date) -> Bool {
         // disable date if we are outside of the current month
         if (monthToDisplay.isDateOutOfMonth(date)) {
             // The date is outside of the current month so it should be disabled
@@ -431,7 +434,7 @@ extension CalendarMonth {
         // check to see if we have a minimum date
         if let minDate = containingCalendar?.configuration.logicConfiguration?.minDate {
             // disabeld if the date is before the min date
-            if (NSCalendar.currentCalendar().compareDate(minDate, toDate: date, toUnitGranularity: NSCalendarUnit.Day) == .OrderedDescending) {
+            if (Foundation.Calendar.current().compare(minDate as Date, to: date, toUnitGranularity: Foundation.Calendar.Unit.day) == .orderedDescending) {
                 return false
             }
         }
@@ -439,7 +442,7 @@ extension CalendarMonth {
         // check to see if we have a max date
         if let maxDate = containingCalendar?.configuration.logicConfiguration?.maxDate {
             // disabled if the date is after the max date
-            if (NSCalendar.currentCalendar().compareDate(maxDate, toDate: date, toUnitGranularity: .Day) == .OrderedAscending) {
+            if (Foundation.Calendar.current().compare(maxDate as Date, to: date, toUnitGranularity: .day) == .orderedAscending) {
                 return false
             }
         }
@@ -454,9 +457,9 @@ extension CalendarMonth {
         
         // check to see if this date is in the list of disabled dates
         if let disabledDates = containingCalendar?.configuration.logicConfiguration?.disabledDates {
-            let relevantDisabledDates = disabledDates.filter({ return (NSCalendar.currentCalendar().compareDate($0, toDate: date, toUnitGranularity: .Day) == .OrderedSame) })
+            let relevantDisabledDates = disabledDates.filter({ return (Foundation.Calendar.current().compare($0 as Date, to: date, toUnitGranularity: .day) == .orderedSame) })
             
-            if let dates = relevantDisabledDates.first {
+            if let _ = relevantDisabledDates.first {
                 // This date is a weekend
                 return false
             }
@@ -468,10 +471,10 @@ extension CalendarMonth {
     /**
      Checks to see if a date is a weekend
     */
-    private func isWeekend(date date: NSDate) -> Bool {
-        let calendar = NSCalendar.currentCalendar()
-        let weekdayRange = calendar.maximumRangeOfUnit(.Weekday)
-        let components = calendar.components(.Weekday, fromDate: date)
+    private func isWeekend(date: Date) -> Bool {
+        let calendar = Foundation.Calendar.current()
+        let weekdayRange = calendar.maximumRange(of: .weekday)
+        let components = calendar.components(.weekday, from: date)
         let weekdayOfDate = components.weekday
         
         if (weekdayOfDate == weekdayRange.location || weekdayOfDate == weekdayRange.length) {

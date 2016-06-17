@@ -14,12 +14,12 @@ public class Calendar: UIViewController {
     // The months that are currently available
     private var monthsShowing = Array<Month>()
     // The month currently showing
-    private var currentMonth = Month(monthDate: NSDate())
+    private var currentMonth = Month(monthDate: Date())
     // The position of the current month in the scroll view
     private var currentMonthPosition: Int = 0
     
     // The date that has been selected
-    public var selectedDate: NSDate?
+    public var selectedDate: Date?
     
     // The delegate to notify of events
     public var delegate: CalendarDelegate?
@@ -39,7 +39,7 @@ public class Calendar: UIViewController {
     public var calendarHeightConstraint: NSLayoutConstraint?
     
     public init(configuration: CalendarConfiguration? = nil) {
-        super.init(nibName: "Calendar", bundle: NSBundle(identifier: "com.beyersapps.CalendarKit"))
+        super.init(nibName: "Calendar", bundle: Bundle(identifier: "com.beyersapps.CalendarKit"))
         
         // set the configuration to the one specified
         if let config = configuration {
@@ -48,7 +48,7 @@ public class Calendar: UIViewController {
     }
 
     public required init(coder aDecoder: NSCoder) {
-        super.init(nibName: "Calendar", bundle: NSBundle(identifier: "com.beyersapps.CalendarKit"))
+        super.init(nibName: "Calendar", bundle: Bundle(identifier: "com.beyersapps.CalendarKit"))
     }
     
     override public func viewDidLoad() {
@@ -61,8 +61,8 @@ public class Calendar: UIViewController {
         calendarCollectionView.backgroundColor = configuration.backgroundColor
         
         // register cell
-        let bundle = NSBundle(identifier: "com.beyersapps.CalendarKit")
-        calendarCollectionView.registerNib(UINib(nibName: "CalendarMonth", bundle: bundle), forCellWithReuseIdentifier: "monthCell")
+        let bundle = Bundle(identifier: "com.beyersapps.CalendarKit")
+        calendarCollectionView.register(UINib(nibName: "CalendarMonth", bundle: bundle), forCellWithReuseIdentifier: "monthCell")
         
         // Set up data to start at the date 2 months ago
         rebuildMonths(currentMonthOnly: true)
@@ -71,7 +71,7 @@ public class Calendar: UIViewController {
         delegate?.calendar(self, didScrollToDate: currentMonth.date, withNumberOfWeeks: currentMonth.weeksInMonth())
     }
     
-    override public func viewWillAppear(animated: Bool) {
+    override public func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
         // fix the calendar height
@@ -81,7 +81,7 @@ public class Calendar: UIViewController {
         self.calendarCollectionView.reloadData()
     }
     
-    public override func viewDidAppear(animated: Bool) {
+    public override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
         // rebuild the month array when the view appears
@@ -89,10 +89,10 @@ public class Calendar: UIViewController {
         
         // reload data and make sure we are at the center month so that we can scroll both ways
         calendarCollectionView.reloadData()
-        calendarCollectionView.scrollToItemAtIndexPath(NSIndexPath(forItem: 0, inSection: currentMonthPosition), atScrollPosition: .Left, animated: false)
+        calendarCollectionView.scrollToItem(at: IndexPath(item: 0, section: currentMonthPosition), at: .left, animated: false)
     }
     
-    public override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
+    public override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
 //        coordinator.animateAlongsideTransition({ (context: UIViewControllerTransitionCoordinatorContext) in
 //            // do nothing
 //        }) { [weak self](context: UIViewControllerTransitionCoordinatorContext) in
@@ -100,7 +100,7 @@ public class Calendar: UIViewController {
 //            self?.view.setNeedsDisplay()
 //                self?.calendarCollectionView.reloadData()
 //        }
-        coordinator.animateAlongsideTransition({ [weak self](context) -> Void in
+        coordinator.animate(alongsideTransition: { [weak self](context) -> Void in
             
             self?.calendarCollectionView.collectionViewLayout.invalidateLayout()
             
@@ -108,7 +108,7 @@ public class Calendar: UIViewController {
                 guard let weakSelf = self else { return }
                 
                 weakSelf.calendarCollectionView.reloadData()
-                weakSelf.calendarCollectionView.scrollToItemAtIndexPath(NSIndexPath(forItem: 0, inSection: weakSelf.currentMonthPosition), atScrollPosition: .Left, animated: false)
+                weakSelf.calendarCollectionView.scrollToItem(at: IndexPath(item: 0, section: weakSelf.currentMonthPosition), at: .left, animated: false)
                 
         })
     }
@@ -133,7 +133,7 @@ public class Calendar: UIViewController {
                 }
                 
                 constraint.constant = desiredHeight
-                UIView.animateWithDuration(0.5, animations: {[weak self]() in
+                UIView.animate(withDuration: 0.5, animations: {[weak self]() in
                     // call layout if needed on superview so it animates and related constraints
                     self?.view.superview?.layoutIfNeeded()
                     // animate calendar constraints
@@ -179,23 +179,23 @@ public class Calendar: UIViewController {
         }
     }
     
-    private func getFirstDayOfMonthOffsetFromCurrentMonth(offset: Int) -> NSDate? {
-        let calendar = NSCalendar.currentCalendar()
-        var date = calendar.dateByAddingUnit(.Month, value: offset, toDate: currentMonth.date, options: [])!
+    private func getFirstDayOfMonthOffsetFromCurrentMonth(_ offset: Int) -> Date? {
+        let calendar = Foundation.Calendar.current()
+        let date = calendar.date(byAdding: .month, value: offset, to: currentMonth.date as Date, options: [])!
         
         return date
     }
     
-    private func isAfterMinDate(date: NSDate) -> Bool {
+    private func isAfterMinDate(_ date: Date) -> Bool {
         if let minDate = configuration.logicConfiguration?.minDate {
-            return (NSCalendar.currentCalendar().compareDate(minDate, toDate: date, toUnitGranularity: NSCalendarUnit.Month) != .OrderedDescending)
+            return (Foundation.Calendar.current().compare(minDate as Date, to: date, toUnitGranularity: Foundation.Calendar.Unit.month) != .orderedDescending)
         }
         return true
     }
     
-    private func isBeforeMaxDate(date: NSDate) -> Bool {
+    private func isBeforeMaxDate(_ date: Date) -> Bool {
         if let maxDate = configuration.logicConfiguration?.maxDate {
-            return (NSCalendar.currentCalendar().compareDate(date, toDate: maxDate, toUnitGranularity: NSCalendarUnit.Month) != .OrderedDescending)
+            return (Foundation.Calendar.current().compare(date, to: maxDate as Date, toUnitGranularity: Foundation.Calendar.Unit.month) != .orderedDescending)
         }
         return true
     }
@@ -204,10 +204,10 @@ public class Calendar: UIViewController {
 
  extension Calendar: UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UIScrollViewDelegate {
     
-    public func collectionView(collectionView: UICollectionView, willDisplayCell cell: UICollectionViewCell, forItemAtIndexPath indexPath: NSIndexPath) {
+    public func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         
         // Keep track of the month being displayed
-        let month = monthsShowing[indexPath.section]
+        let month = monthsShowing[(indexPath as NSIndexPath).section]
         if (month != currentMonth) {
             currentMonth = month
         }
@@ -216,7 +216,7 @@ public class Calendar: UIViewController {
     /**
      Handle scrolling ending
     */
-    public func scrollViewDidEndDecelerating(scrollView: UIScrollView) {
+    public func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         // if we are not on the center section
         let offset = scrollView.contentOffset.x
         if (scrollView.contentOffset.x != self.view.frame.width * CGFloat(currentMonthPosition)) {
@@ -246,7 +246,7 @@ public class Calendar: UIViewController {
             
             // reload data and move to the center of the scroll view
             calendarCollectionView.reloadData()
-            calendarCollectionView.scrollToItemAtIndexPath(NSIndexPath(forItem: 0, inSection: currentMonthPosition), atScrollPosition: UICollectionViewScrollPosition.Left, animated: false)
+            calendarCollectionView.scrollToItem(at: IndexPath(item: 0, section: currentMonthPosition), at: UICollectionViewScrollPosition.left, animated: false)
         } else {
             // If we are still in the center of the scroll view then we didn't change months
             if (currentMonth != monthsShowing[currentMonthPosition]) {
@@ -255,37 +255,37 @@ public class Calendar: UIViewController {
         }
     }
     
-    public func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
+    public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return calendarCollectionView.frame.size
     }
     
-    public func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
+    public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         // Nothing happens here b/c we can only select individual cells
-        collectionView.deselectItemAtIndexPath(indexPath, animated: false)
+        collectionView.deselectItem(at: indexPath, animated: false)
     }
     
 }
 
 extension Calendar: UICollectionViewDataSource {
     
-    public func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         // We are showing one CalendarMonth cell for each section
         return 1
     }
     
-    public func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
+    public func numberOfSections(in collectionView: UICollectionView) -> Int {
         // Show one section for each month
         return monthsShowing.count
     }
     
-    public func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
+    public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         // Get the month cell
-        let cell = collectionView.dequeueReusableCellWithReuseIdentifier("monthCell", forIndexPath: indexPath)
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "monthCell", for: indexPath)
         if let month = cell as? CalendarMonth {
             // let the monthCell know that I own it
             month.containingCalendar = self
-            month.monthToDisplay = monthsShowing[indexPath.section]
+            month.monthToDisplay = monthsShowing[(indexPath as NSIndexPath).section]
             month.backgroundColor = configuration.backgroundColor
         }
      

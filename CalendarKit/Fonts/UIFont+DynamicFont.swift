@@ -20,7 +20,7 @@ extension UIFont {
     */
     class func preferredMonthHeaderFont() -> UIFont {
         var fontSize: CGFloat
-        let contentSize = UIApplication.sharedApplication().preferredContentSizeCategory
+        let contentSize = UIApplication.shared().preferredContentSizeCategory
         
         switch contentSize {
         case UIContentSizeCategoryExtraSmall:
@@ -44,7 +44,7 @@ extension UIFont {
         }
         
         // if the font we create doesn't work lets return a better font
-        return UIFont.systemFontOfSize(fontSize)
+        return UIFont.systemFont(ofSize: fontSize)
     }
     
     /**
@@ -54,7 +54,7 @@ extension UIFont {
      */
     class func preferredInputViewMonthHeaderFont() -> UIFont {
         var fontSize: CGFloat
-        let contentSize = UIApplication.sharedApplication().preferredContentSizeCategory
+        let contentSize = UIApplication.shared().preferredContentSizeCategory
         
         switch contentSize {
         case UIContentSizeCategoryExtraSmall:
@@ -78,7 +78,7 @@ extension UIFont {
         }
         
         // if the font we create doesn't work lets return a better font
-        return UIFont.systemFontOfSize(fontSize)
+        return UIFont.systemFont(ofSize: fontSize)
     }
     
     /**
@@ -88,7 +88,7 @@ extension UIFont {
      */
     class func preferredWeekdayHeaderFont() -> UIFont {
         var fontSize: CGFloat
-        let contentSize = UIApplication.sharedApplication().preferredContentSizeCategory
+        let contentSize = UIApplication.shared().preferredContentSizeCategory
         
         switch contentSize {
         case UIContentSizeCategoryExtraSmall:
@@ -112,7 +112,7 @@ extension UIFont {
         }
         
         // if the font we create doesn't work lets return a better font
-        return UIFont.systemFontOfSize(fontSize)
+        return UIFont.systemFont(ofSize: fontSize)
     }
     
     /**
@@ -122,7 +122,7 @@ extension UIFont {
      */
     class func preferredInputViewWeekdayHeaderFont() -> UIFont {
         var fontSize: CGFloat
-        let contentSize = UIApplication.sharedApplication().preferredContentSizeCategory
+        let contentSize = UIApplication.shared().preferredContentSizeCategory
         
         switch contentSize {
         case UIContentSizeCategoryExtraSmall:
@@ -146,7 +146,7 @@ extension UIFont {
         }
         
         // if the font we create doesn't work lets return a better font
-        return UIFont.systemFontOfSize(fontSize)
+        return UIFont.systemFont(ofSize: fontSize)
     }
     
     /**
@@ -156,7 +156,7 @@ extension UIFont {
      */
     class func preferredDateFont() -> UIFont {
         var fontSize: CGFloat
-        let contentSize = UIApplication.sharedApplication().preferredContentSizeCategory
+        let contentSize = UIApplication.shared().preferredContentSizeCategory
         
         switch contentSize {
         case UIContentSizeCategoryExtraSmall:
@@ -180,7 +180,7 @@ extension UIFont {
         }
         
         // if the font we create doesn't work lets return a better font
-        return UIFont.systemFontOfSize(fontSize)
+        return UIFont.systemFont(ofSize: fontSize)
     }
     
     /**
@@ -190,7 +190,7 @@ extension UIFont {
      */
     class func preferredInputViewDateFont() -> UIFont {
         var fontSize: CGFloat
-        let contentSize = UIApplication.sharedApplication().preferredContentSizeCategory
+        let contentSize = UIApplication.shared().preferredContentSizeCategory
         
         switch contentSize {
         case UIContentSizeCategoryExtraSmall:
@@ -214,7 +214,7 @@ extension UIFont {
         }
         
         // if the font we create doesn't work lets return a better font
-        return UIFont.systemFontOfSize(fontSize)
+        return UIFont.systemFont(ofSize: fontSize)
     }
     
 }

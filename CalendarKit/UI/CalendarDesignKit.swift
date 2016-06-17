@@ -32,10 +32,10 @@ public class CalendarDesignKit : NSObject {
 
     //// Drawing Methods
 
-    public class func drawCircleFilledBackground(frame frame: CGRect = CGRect(x: 0, y: 0, width: 58, height: 58), dateCircleColor: UIColor = UIColor(red: 0.545, green: 0.800, blue: 0.764, alpha: 1.000)) {
+    public class func drawCircleFilledBackground(frame: CGRect = CGRect(x: 0, y: 0, width: 58, height: 58), dateCircleColor: UIColor = UIColor(red: 0.545, green: 0.800, blue: 0.764, alpha: 1.000)) {
 
         //// DateCircle Drawing
-        let dateCirclePath = UIBezierPath(ovalInRect: CGRect(x: frame.minX + 8, y: frame.minY + 8, width: frame.width - 16, height: frame.height - 16))
+        let dateCirclePath = UIBezierPath(ovalIn: CGRect(x: frame.minX + 8, y: frame.minY + 8, width: frame.width - 16, height: frame.height - 16))
         dateCircleColor.setFill()
         dateCirclePath.fill()
         dateCircleColor.setStroke()
@@ -43,10 +43,10 @@ public class CalendarDesignKit : NSObject {
         dateCirclePath.stroke()
     }
 
-    public class func drawCircleBackground(frame frame: CGRect = CGRect(x: 0, y: 0, width: 58, height: 58), dateCircleColor: UIColor = UIColor(red: 0.545, green: 0.800, blue: 0.764, alpha: 1.000)) {
+    public class func drawCircleBackground(frame: CGRect = CGRect(x: 0, y: 0, width: 58, height: 58), dateCircleColor: UIColor = UIColor(red: 0.545, green: 0.800, blue: 0.764, alpha: 1.000)) {
 
         //// DateCircle Drawing
-        let dateCirclePath = UIBezierPath(ovalInRect: CGRect(x: frame.minX + 8, y: frame.minY + 8, width: frame.width - 16, height: frame.height - 16))
+        let dateCirclePath = UIBezierPath(ovalIn: CGRect(x: frame.minX + 8, y: frame.minY + 8, width: frame.width - 16, height: frame.height - 16))
         dateCircleColor.setStroke()
         dateCirclePath.lineWidth = 3
         dateCirclePath.stroke()

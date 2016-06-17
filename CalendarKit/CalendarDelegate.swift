@@ -18,7 +18,7 @@ public protocol CalendarDelegate {
     * @parameter calendar The calendar that selected the new date
     * @parameter date The new date that was selected
     **/
-    func calendar(calendar: Calendar, didSelectDate date: NSDate)
+    func calendar(_ calendar: Calendar, didSelectDate date: Date)
     
     /**
     * Notifies the delegate that the calendar scrolled to a new month. This
@@ -30,22 +30,22 @@ public protocol CalendarDelegate {
     * @parameter date A random day in the month that was selected
     * @parameter weeks The number of weeks in the new month
     **/
-    func calendar(calendar: Calendar, didScrollToDate date: NSDate, withNumberOfWeeks weeks: Int)
+    func calendar(_ calendar: Calendar, didScrollToDate date: Date, withNumberOfWeeks weeks: Int)
     
     /**
      Asks the delegate if there should be an accessory view on the current date.
     **/
-    func acessory(forDate date: NSDate, onCalendar calendar: Calendar) -> CalendarAccessory?
+    func acessory(forDate date: Date, onCalendar calendar: Calendar) -> CalendarAccessory?
     
 }
 
 public extension CalendarDelegate {
     
-    func calendar(calendar: Calendar, didScrollToDate date: NSDate, withNumberOfWeeks weeks: Int) {
+    func calendar(_ calendar: Calendar, didScrollToDate date: Date, withNumberOfWeeks weeks: Int) {
         // Do nothing here
     }
     
-    func acessory(forDate date: NSDate, onCalendar calendar: Calendar) -> CalendarAccessory? {
+    func acessory(forDate date: Date, onCalendar calendar: Calendar) -> CalendarAccessory? {
         // I don't have any accessory views by default
         return nil
     }

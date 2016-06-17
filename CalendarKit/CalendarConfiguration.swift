@@ -13,11 +13,11 @@ import Foundation
  */
 public enum DisplayStyle {
     /// The default display style set up for full screen calendars.
-    case FullScreen
+    case fullScreen
     /// The default display style set up for using the calendar as a UITextField's input view.
-    case InputView
+    case inputView
     /// Fully custom display. Any values that are not specified will revert to the default values of the <code>FullScreen</code> display.
-    case Custom
+    case custom
 }
 
 /**
@@ -25,23 +25,23 @@ public enum DisplayStyle {
  */
 public enum ViewPlacement {
     /// Puts the date text near the top of the cell at a constant distance from the top and centered horizontally.
-    case TopCenter(verticalOffset: CGFloat)
+    case topCenter(verticalOffset: CGFloat)
     /// Puts the date text near the top-left of the cell at a constant distance from the top and a constant distance from the left.
-    case TopLeft(verticalOffset: CGFloat, horizontalOffset: CGFloat)
+    case topLeft(verticalOffset: CGFloat, horizontalOffset: CGFloat)
     /// Puts the date text near the top-right of the cell at a constant distance from the top and a constant distance from the right.
-    case TopRight(verticalOffset: CGFloat, horizontalOffset: CGFloat)
+    case topRight(verticalOffset: CGFloat, horizontalOffset: CGFloat)
     /// Puts the date text centered vertically and horizontally in the date cell.
-    case CenterCenter
+    case centerCenter
     /// Puts the date text near the left of the cell centered vertically and a constant distance from the left.
-    case CenterLeft(horizontalOffset: CGFloat)
+    case centerLeft(horizontalOffset: CGFloat)
     /// Puts the date text near the right of the cell centered vertically and a constant distance from the right.
-    case CenterRight(horizontalOffset: CGFloat)
+    case centerRight(horizontalOffset: CGFloat)
     /// Puts the date text near the bottom of the cell at a constant distance from the bottom and centered horizontally.
-    case BottomCenter(verticalOffset: CGFloat)
+    case bottomCenter(verticalOffset: CGFloat)
     /// Puts the date text near the bottom-left of the cell at a constant distance from the bottom and a constant distance from the left.
-    case BottomLeft(verticalOffset: CGFloat, horizontalOffset: CGFloat)
+    case bottomLeft(verticalOffset: CGFloat, horizontalOffset: CGFloat)
     /// Puts the date text near the bottom-right of the cell at a constant distance from the bottom and a constant distance from the right.
-    case BottomRight(verticalOffset: CGFloat, horizontalOffset: CGFloat)
+    case bottomRight(verticalOffset: CGFloat, horizontalOffset: CGFloat)
 }
 
 /**
@@ -116,15 +116,15 @@ public struct HeaderConfiguration {
 public struct CalendarLogicConfiguration {
     
     /// Specifies the minimum date to be enabled.
-    private(set) public var minDate: NSDate?
+    private(set) public var minDate: Date?
     /// Specifies the maximum date to be enabled.
-    private(set) public var maxDate: NSDate?
+    private(set) public var maxDate: Date?
     /// Specifies any dates within the <code>minDate</code> and <code>maxDate</code> that should also be disabled.
-    private(set) public var disabledDates: [NSDate]?
+    private(set) public var disabledDates: [Date]?
     /// Specifies if weekends should be disabled. Default is false.
     private(set) public var shouldDisableWeekends = false
     
-    public init(minDate: NSDate? = nil, maxDate: NSDate? = nil, disabledDates: [NSDate]? = nil, disableWeekends: Bool = false) {
+    public init(minDate: Date? = nil, maxDate: Date? = nil, disabledDates: [Date]? = nil, disableWeekends: Bool = false) {
         self.minDate = minDate
         self.maxDate = maxDate
         self.disabledDates = disabledDates
@@ -157,19 +157,19 @@ public struct CalendarConfiguration {
     private(set) public var logicConfiguration: CalendarLogicConfiguration?
     
     public static func FullScreenConfiguration() -> CalendarConfiguration {
-        let dateCellConfiguration = DateCellConfiguration(textStyle: .TopCenter(verticalOffset: 17), circleSizeOffset: nil, font: UIFont.preferredDateFont(), backgroundColor: CalendarDesignKit.dateBackgroundColor, disabledBackgroundColor: CalendarDesignKit.calendarDisabledDateColor, highlightColor: CalendarDesignKit.calendarDateColor, textEnabledColor: UIColor.blackColor(), textDisabledColor: UIColor.whiteColor().colorWithAlphaComponent(0.6), textHighlightedColor: UIColor.blackColor().colorWithAlphaComponent(0.3), textSelectedColor: UIColor.whiteColor(), heightForDynamicHeightRows: 0.0)
-        let monthHeaderConfig = HeaderConfiguration(font: UIFont.preferredMonthHeaderFont(), textColor: UIColor.whiteColor(), backgroundColor: CalendarDesignKit.calendarDateColor, height: 50.0)
-        let weekdayHeaderConfig = HeaderConfiguration(font: UIFont.preferredWeekdayHeaderFont(), textColor: UIColor.whiteColor(), backgroundColor: UIColor.lightGrayColor(), height: 30)
+        let dateCellConfiguration = DateCellConfiguration(textStyle: .topCenter(verticalOffset: 17), circleSizeOffset: nil, font: UIFont.preferredDateFont(), backgroundColor: CalendarDesignKit.dateBackgroundColor, disabledBackgroundColor: CalendarDesignKit.calendarDisabledDateColor, highlightColor: CalendarDesignKit.calendarDateColor, textEnabledColor: UIColor.black(), textDisabledColor: UIColor.white().withAlphaComponent(0.6), textHighlightedColor: UIColor.black().withAlphaComponent(0.3), textSelectedColor: UIColor.white(), heightForDynamicHeightRows: 0.0)
+        let monthHeaderConfig = HeaderConfiguration(font: UIFont.preferredMonthHeaderFont(), textColor: UIColor.white(), backgroundColor: CalendarDesignKit.calendarDateColor, height: 50.0)
+        let weekdayHeaderConfig = HeaderConfiguration(font: UIFont.preferredWeekdayHeaderFont(), textColor: UIColor.white(), backgroundColor: UIColor.lightGray(), height: 30)
         
-        return CalendarConfiguration(displayStyle: .FullScreen, monthFormat: "MMMM", calendarBackgroundColor: CalendarDesignKit.calendarBackgroundColor, hasDynamicHeight: false, spaceBetweenDates: 2.0, monthHeaderConfiguration: monthHeaderConfig, weekdayHeaderConfiguration: weekdayHeaderConfig, dateCellConfiguration: dateCellConfiguration)
+        return CalendarConfiguration(displayStyle: .fullScreen, monthFormat: "MMMM", calendarBackgroundColor: CalendarDesignKit.calendarBackgroundColor, hasDynamicHeight: false, spaceBetweenDates: 2.0, monthHeaderConfiguration: monthHeaderConfig, weekdayHeaderConfiguration: weekdayHeaderConfig, dateCellConfiguration: dateCellConfiguration)
     }
     
     public static func InputViewConfiguration() -> CalendarConfiguration {
-        let dateCellConfiguration = DateCellConfiguration(textStyle: .CenterCenter, circleSizeOffset: 8, font: UIFont.preferredInputViewDateFont(), backgroundColor: CalendarDesignKit.dateBackgroundColor, disabledBackgroundColor: CalendarDesignKit.calendarDisabledDateColor, highlightColor: CalendarDesignKit.calendarDateColor, textEnabledColor: UIColor.blackColor(), textDisabledColor: UIColor.whiteColor().colorWithAlphaComponent(0.6), textHighlightedColor: UIColor.blackColor().colorWithAlphaComponent(0.3), textSelectedColor: UIColor.whiteColor(), heightForDynamicHeightRows: 0.0)
-        let monthHeaderConfig = HeaderConfiguration(font: UIFont.preferredInputViewMonthHeaderFont(), textColor: UIColor.whiteColor(), backgroundColor: CalendarDesignKit.calendarDateColor, height: 25.0)
-        let weekdayHeaderConfig = HeaderConfiguration(font: UIFont.preferredInputViewWeekdayHeaderFont(), textColor: UIColor.whiteColor(), backgroundColor: UIColor.lightGrayColor(), height: 15.0)
+        let dateCellConfiguration = DateCellConfiguration(textStyle: .centerCenter, circleSizeOffset: 8, font: UIFont.preferredInputViewDateFont(), backgroundColor: CalendarDesignKit.dateBackgroundColor, disabledBackgroundColor: CalendarDesignKit.calendarDisabledDateColor, highlightColor: CalendarDesignKit.calendarDateColor, textEnabledColor: UIColor.black(), textDisabledColor: UIColor.white().withAlphaComponent(0.6), textHighlightedColor: UIColor.black().withAlphaComponent(0.3), textSelectedColor: UIColor.white(), heightForDynamicHeightRows: 0.0)
+        let monthHeaderConfig = HeaderConfiguration(font: UIFont.preferredInputViewMonthHeaderFont(), textColor: UIColor.white(), backgroundColor: CalendarDesignKit.calendarDateColor, height: 25.0)
+        let weekdayHeaderConfig = HeaderConfiguration(font: UIFont.preferredInputViewWeekdayHeaderFont(), textColor: UIColor.white(), backgroundColor: UIColor.lightGray(), height: 15.0)
         
-        return CalendarConfiguration(displayStyle: .InputView, monthFormat: "MMMM", calendarBackgroundColor: CalendarDesignKit.calendarBackgroundColor, hasDynamicHeight: false, spaceBetweenDates: 2.0, monthHeaderConfiguration: monthHeaderConfig, weekdayHeaderConfiguration: weekdayHeaderConfig, dateCellConfiguration: dateCellConfiguration)
+        return CalendarConfiguration(displayStyle: .inputView, monthFormat: "MMMM", calendarBackgroundColor: CalendarDesignKit.calendarBackgroundColor, hasDynamicHeight: false, spaceBetweenDates: 2.0, monthHeaderConfiguration: monthHeaderConfig, weekdayHeaderConfiguration: weekdayHeaderConfig, dateCellConfiguration: dateCellConfiguration)
     }
     
     /**

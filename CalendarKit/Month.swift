@@ -12,14 +12,14 @@ private let monthFormatter = MonthFormatter()
 
 internal class Month: NSObject {
     
-    var date: NSDate
+    var date: Date
     
     /**
     * Creates a Month object for the date given
     *
     * @param monthDate Any date in the month that needs to be created
     **/
-    required init(monthDate: NSDate) {
+    required init(monthDate: Date) {
         date = monthDate
     }
     
@@ -29,7 +29,7 @@ internal class Month: NSObject {
     * @return The string representation of the current month
     **/
     func monthName() -> String {
-        return monthFormatter.formatter.stringFromDate(date)
+        return monthFormatter.formatter.string(from: date)
     }
     
     /**
@@ -42,10 +42,10 @@ internal class Month: NSObject {
     * @param object AnyObject that needs to be compared against the current Month
     * @return A Bool. True if the two objects are equal, otherwise false.
     **/
-    override func isEqual(object: AnyObject?) -> Bool {
+    override func isEqual(_ object: AnyObject?) -> Bool {
         if let otherMonth = object as? Month {
-            let myComponents = NSCalendar.currentCalendar().components([.Month, .Year], fromDate: date)
-            let otherComponents = NSCalendar.currentCalendar().components([.Month, .Year], fromDate: otherMonth.date)
+            let myComponents = Foundation.Calendar.current().components([.month, .year], from: date)
+            let otherComponents = Foundation.Calendar.current().components([.month, .year], from: otherMonth.date)
             
             if (myComponents.month == otherComponents.month && myComponents.year == otherComponents.year) {
                 return true
@@ -58,7 +58,7 @@ internal class Month: NSObject {
     /**
      Sets the format used when getting the month name.
     */
-    func useMonthFormat(format: String) {
+    func useMonthFormat(_ format: String) {
         monthFormatter.formatter.dateFormat = format
     }
 }
@@ -76,7 +76,7 @@ extension Month {
     * @param offset The number of months between the otherMonth and the desired month
     **/
     convenience init(otherMonth: Month, offsetMonths offset: Int) {
-        let date = NSCalendar.currentCalendar().dateByAddingUnit(.Month, value: offset, toDate: otherMonth.date, options: [])!
+        let date = Foundation.Calendar.current().date(byAdding: .month, value: offset, to: otherMonth.date, options: [])!
         self.init(monthDate: date)
     }
     
@@ -91,19 +91,19 @@ extension Month {
     * This returns the days in the current month
     **/
     func numberOfDaysInMonth() -> Int {
-        let calendar = NSCalendar.currentCalendar()
-        var components = calendar.components([.Day, .Month, .Year], fromDate: date)
+        let calendar = Foundation.Calendar.current()
+        var components = calendar.components([.day, .month, .year], from: date)
         components.day = 1
-        let firstDayDate = calendar.dateFromComponents(components)
+        let firstDayDate = calendar.date(from: components)
         
-        let delta : NSDateComponents = NSDateComponents()
+        var delta : DateComponents = DateComponents()
         delta.month = 1
         delta.day = -1
         
-        let newDate = calendar.dateByAddingComponents(delta, toDate: firstDayDate!, options: [])
+        let newDate = calendar.date(byAdding: delta, to: firstDayDate!, options: [])
         if let lastDayDate = newDate {
-            components = calendar.components(.Day, fromDate: lastDayDate)
-            return components.day
+            components = calendar.components(.day, from: lastDayDate)
+            return components.day!
         }
         
         return -1
@@ -113,14 +113,15 @@ extension Month {
     * This returns the first day of the week as an integer value from 0-6 (Sunday - Saturday)
     **/
     func firstDayOfWeek() -> Int {
-        let calendar = NSCalendar.currentCalendar()
-        var components = calendar.components([.Day, .Month, .Year, .Weekday], fromDate: date)
+        let calendar = Foundation.Calendar.current()
+        var components = calendar.components([.day, .month, .year, .weekday], from: date)
         components.day = 1
-        components = calendar.components([.Day, .Month, .Year, .Weekday], fromDate: calendar.dateFromComponents(components)!)
-        var day = components.weekday
-        day -= 1
+        components = calendar.components([.day, .month, .year, .weekday], from: calendar.date(from: components)!)
+        if let day = components.weekday {
+            return day-1
+        }
         
-        return day
+        return -1
     }
     
     /**
@@ -141,19 +142,19 @@ extension Month {
         return numberOfWeeks
     }
     
-    func getDateForCell(indexPath path: NSIndexPath) -> NSDate {
-        let calendar = NSCalendar.currentCalendar()
-        let components = calendar.components([.Day, .Month, .Year, .Weekday], fromDate: date)
-        var dayOfMonth = path.row
+    func getDateForCell(indexPath path: IndexPath) -> Date {
+        let calendar = Foundation.Calendar.current()
+        var components = calendar.components([.day, .month, .year, .weekday], from: date)
+        var dayOfMonth = (path as NSIndexPath).row
         let firstDay = firstDayOfWeek()
         // subtract the offset to account for the first day of the week
         dayOfMonth -= (firstDay - 1)
         
-        var dateToReturn: NSDate?
+        var dateToReturn: Date?
         components.day = dayOfMonth
 
         // The date is in the current month
-        let newDate = calendar.dateFromComponents(components)
+        let newDate = calendar.date(from: components)
 
         dateToReturn = newDate
 
@@ -165,10 +166,10 @@ extension Month {
         }
     }
     
-    func isDateOutOfMonth(testDate: NSDate) -> Bool {
-        let calendar = NSCalendar.currentCalendar()
-        let components = calendar.components([.Month], fromDate: testDate)
-        let currentComponents = calendar.components([.Month], fromDate: date)
+    func isDateOutOfMonth(_ testDate: Date) -> Bool {
+        let calendar = Foundation.Calendar.current()
+        let components = calendar.components([.month], from: testDate)
+        let currentComponents = calendar.components([.month], from: date)
         
         if (components.month == currentComponents.month) {
             return false
@@ -184,8 +185,8 @@ extension Month {
  */
 private class MonthFormatter {
     
-    lazy var formatter: NSDateFormatter = {
-       let newFormatter = NSDateFormatter()
+    lazy var formatter: DateFormatter = {
+       let newFormatter = DateFormatter()
         newFormatter.dateFormat = "MMMM"
         
         return newFormatter
