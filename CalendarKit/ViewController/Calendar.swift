@@ -181,7 +181,7 @@ public class Calendar: UIViewController {
     
     private func getFirstDayOfMonthOffsetFromCurrentMonth(offset: Int) -> NSDate? {
         let calendar = NSCalendar.currentCalendar()
-        var date = calendar.dateByAddingUnit(.Month, value: offset, toDate: currentMonth.date, options: [])!
+        let date = calendar.dateByAddingUnit(.Month, value: offset, toDate: currentMonth.date, options: [])!
         
         return date
     }
