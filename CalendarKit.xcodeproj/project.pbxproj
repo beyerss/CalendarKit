@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C80E6EEA1D2303E000DD369A /* BasicDateCollectionViewCellTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C80E6EE91D2303E000DD369A /* BasicDateCollectionViewCellTests.swift */; };
 		C83136131CD371A300883945 /* CalendarMonth.swift in Sources */ = {isa = PBXBuildFile; fileRef = C83136111CD371A300883945 /* CalendarMonth.swift */; };
 		C83136141CD371A300883945 /* CalendarMonth.xib in Resources */ = {isa = PBXBuildFile; fileRef = C83136121CD371A300883945 /* CalendarMonth.xib */; };
 		C83136171CD374F300883945 /* MonthHeaderCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C83136151CD374F300883945 /* MonthHeaderCollectionViewCell.swift */; };
@@ -47,6 +48,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		C80E6EE91D2303E000DD369A /* BasicDateCollectionViewCellTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BasicDateCollectionViewCellTests.swift; sourceTree = "<group>"; };
 		C83136111CD371A300883945 /* CalendarMonth.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CalendarMonth.swift; path = ViewController/CalendarMonth.swift; sourceTree = "<group>"; };
 		C83136121CD371A300883945 /* CalendarMonth.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = CalendarMonth.xib; path = ViewController/CalendarMonth.xib; sourceTree = "<group>"; };
 		C83136151CD374F300883945 /* MonthHeaderCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MonthHeaderCollectionViewCell.swift; path = Cells/MonthHeaderCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -160,6 +162,7 @@
 				C8CEF6A11D14701600E225FD /* CalendarConfigurationTests.swift */,
 				C8CEF6A41D147BD700E225FD /* CalendarAccesoryTest.swift */,
 				C8CEF6A61D147D8500E225FD /* MonthTests.swift */,
+				C80E6EE91D2303E000DD369A /* BasicDateCollectionViewCellTests.swift */,
 			);
 			path = CalendarKitTests;
 			sourceTree = "<group>";
@@ -336,6 +339,7 @@
 				C8CEF6A51D147BD700E225FD /* CalendarAccesoryTest.swift in Sources */,
 				C8CEF6A71D147D8500E225FD /* MonthTests.swift in Sources */,
 				C8CEF6A21D14701600E225FD /* CalendarConfigurationTests.swift in Sources */,
+				C80E6EEA1D2303E000DD369A /* BasicDateCollectionViewCellTests.swift in Sources */,
 				C83AFA1E1B10B4FB00F04ADC /* CalendarDesignKit.swift in Sources */,
 				C85E207B1B249DF80080671E /* Month.swift in Sources */,
 			);
