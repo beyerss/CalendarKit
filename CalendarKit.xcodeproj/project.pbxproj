@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		C80E6EEA1D2303E000DD369A /* BasicDateCollectionViewCellTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C80E6EE91D2303E000DD369A /* BasicDateCollectionViewCellTests.swift */; };
+		C80E6EEC1D23135D00DD369A /* MonthHeaderCollectionViewCellTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C80E6EEB1D23135D00DD369A /* MonthHeaderCollectionViewCellTests.swift */; };
 		C83136131CD371A300883945 /* CalendarMonth.swift in Sources */ = {isa = PBXBuildFile; fileRef = C83136111CD371A300883945 /* CalendarMonth.swift */; };
 		C83136141CD371A300883945 /* CalendarMonth.xib in Resources */ = {isa = PBXBuildFile; fileRef = C83136121CD371A300883945 /* CalendarMonth.xib */; };
 		C83136171CD374F300883945 /* MonthHeaderCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C83136151CD374F300883945 /* MonthHeaderCollectionViewCell.swift */; };
@@ -49,6 +50,7 @@
 
 /* Begin PBXFileReference section */
 		C80E6EE91D2303E000DD369A /* BasicDateCollectionViewCellTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BasicDateCollectionViewCellTests.swift; sourceTree = "<group>"; };
+		C80E6EEB1D23135D00DD369A /* MonthHeaderCollectionViewCellTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MonthHeaderCollectionViewCellTests.swift; sourceTree = "<group>"; };
 		C83136111CD371A300883945 /* CalendarMonth.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CalendarMonth.swift; path = ViewController/CalendarMonth.swift; sourceTree = "<group>"; };
 		C83136121CD371A300883945 /* CalendarMonth.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = CalendarMonth.xib; path = ViewController/CalendarMonth.xib; sourceTree = "<group>"; };
 		C83136151CD374F300883945 /* MonthHeaderCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MonthHeaderCollectionViewCell.swift; path = Cells/MonthHeaderCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -163,6 +165,7 @@
 				C8CEF6A41D147BD700E225FD /* CalendarAccesoryTest.swift */,
 				C8CEF6A61D147D8500E225FD /* MonthTests.swift */,
 				C80E6EE91D2303E000DD369A /* BasicDateCollectionViewCellTests.swift */,
+				C80E6EEB1D23135D00DD369A /* MonthHeaderCollectionViewCellTests.swift */,
 			);
 			path = CalendarKitTests;
 			sourceTree = "<group>";
@@ -341,6 +344,7 @@
 				C8CEF6A21D14701600E225FD /* CalendarConfigurationTests.swift in Sources */,
 				C80E6EEA1D2303E000DD369A /* BasicDateCollectionViewCellTests.swift in Sources */,
 				C83AFA1E1B10B4FB00F04ADC /* CalendarDesignKit.swift in Sources */,
+				C80E6EEC1D23135D00DD369A /* MonthHeaderCollectionViewCellTests.swift in Sources */,
 				C85E207B1B249DF80080671E /* Month.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

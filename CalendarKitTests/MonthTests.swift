@@ -7,6 +7,7 @@
 //
 
 import XCTest
+@testable import CalendarKit
 
 class MonthTests: XCTestCase {
     
